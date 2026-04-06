@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="易藍琪 ART — 東方能量珠寶美學，精選水晶礦石飾品，傳遞自然能量與東方智慧之美。">
+<meta name="robots" content="index, follow">
+<title>易藍琪 ART｜東方能量珠寶美學</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Noto+Serif+TC:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #060c1a;
+  --navy2: #0d1628;
+  --navy3: #111f35;
+  --navy4: #1a2d4a;
+  --gold: #D4AF37;
+  --gold2: #c9956a;
+  --gold3: #e8d5a3;
+  --rose: #B76E79;
+  --white: #f8f4ee;
+  --muted: rgba(248,244,238,0.5);
+  --border: rgba(212,175,55,0.15);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--navy);
+  color: var(--white);
+  font-family: 'Noto Sans TC', sans-serif;
+  overflow-x: hidden;
+  cursor: default;
+}
+
+/* ── 自訂滾動條 ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--navy); }
+::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 20px 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(180deg, rgba(6,12,26,0.95) 0%, transparent 100%);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+  transition: all 0.3s;
+}
+nav.scrolled {
+  background: rgba(6,12,26,0.98);
+  padding: 14px 60px;
+}
+.nav-logo {
+  font-family: 'Cinzel', serif;
+  font-size: 20px;
+  color: var(--gold);
+  letter-spacing: 4px;
+  text-decoration: none;
+}
+.nav-logo span {
+  display: block;
+  font-family: 'Noto Serif TC', serif;
+  font-size: 10px;
+  color: var(--gold3);
+  letter-spacing: 6px;
+  margin-top: 2px;
+  font-weight: 300;
+}
+.nav-links {
+  display: flex; gap: 40px; list-style: none;
+}
+.nav-links a {
+  color: var(--gold3);
+  text-decoration: none;
+  font-size: 12px;
+  letter-spacing: 2px;
+  transition: color 0.2s;
+  font-family: 'Noto Serif TC', serif;
+  font-weight: 300;
+}
+.nav-links a:hover { color: var(--gold); }
+.nav-cta {
+  padding: 9px 24px;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-decoration: none;
+  font-family: 'Noto Serif TC', serif;
+  transition: all 0.25s;
+}
+.nav-cta:hover {
+  background: var(--gold);
+  color: var(--navy);
+}
+
+/* ── HERO ── */
+#hero {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 100px 60px 60px;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 50%, rgba(212,175,55,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 30%, rgba(183,110,121,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 50% 80%, rgba(212,175,55,0.04) 0%, transparent 60%);
+}
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(212,175,55,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(212,175,55,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+}
+.hero-particles {
+  position: absolute; inset: 0; overflow: hidden;
+}
+.particle {
+  position: absolute;
+  width: 2px; height: 2px;
+  background: var(--gold);
+  border-radius: 50%;
+  opacity: 0;
+  animation: float-up 8s infinite;
+}
+@keyframes float-up {
+  0% { opacity: 0; transform: translateY(0) scale(0); }
+  20% { opacity: 0.6; transform: translateY(-20px) scale(1); }
+  80% { opacity: 0.2; }
+  100% { opacity: 0; transform: translateY(-120px) scale(0.5); }
+}
+.hero-content {
+  position: relative; z-index: 2;
+  text-align: center;
+  max-width: 800px;
+}
+.hero-tag {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 5px;
+  color: var(--gold);
+  font-family: 'Cinzel', serif;
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fade-up 0.8s 0.2s forwards;
+}
+.hero-tag::before, .hero-tag::after {
+  content: '—';
+  margin: 0 12px;
+  opacity: 0.5;
+}
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(52px, 8vw, 96px);
+  font-weight: 300;
+  line-height: 1.05;
+  margin-bottom: 8px;
+  opacity: 0;
+  animation: fade-up 0.8s 0.4s forwards;
+}
+.hero-title em {
+  font-style: italic;
+  color: var(--gold);
+}
+.hero-subtitle-zh {
+  font-family: 'Noto Serif TC', serif;
+  font-size: clamp(22px, 3vw, 36px);
+  font-weight: 300;
+  color: var(--gold3);
+  letter-spacing: 8px;
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fade-up 0.8s 0.5s forwards;
+}
+.hero-desc {
+  font-size: 14px;
+  line-height: 2;
+  color: var(--muted);
+  max-width: 480px;
+  margin: 0 auto 48px;
+  font-weight: 300;
+  opacity: 0;
+  animation: fade-up 0.8s 0.7s forwards;
+}
+.hero-btns {
+  display: flex; gap: 16px; justify-content: center; align-items: center;
+  opacity: 0;
+  animation: fade-up 0.8s 0.9s forwards;
+}
+.btn-primary {
+  padding: 14px 40px;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: var(--navy);
+  font-size: 12px;
+  letter-spacing: 3px;
+  font-family: 'Noto Serif TC', serif;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.btn-primary:hover::before { opacity: 1; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(212,175,55,0.4); }
+.btn-ghost {
+  padding: 14px 40px;
+  border: 1px solid rgba(212,175,55,0.4);
+  color: var(--gold3);
+  font-size: 12px;
+  letter-spacing: 3px;
+  font-family: 'Noto Serif TC', serif;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+.btn-ghost:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(212,175,55,0.05);
+}
+.hero-scroll {
+  position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  opacity: 0;
+  animation: fade-up 0.8s 1.2s forwards;
+}
+.hero-scroll span {
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: var(--muted);
+  font-family: 'Cinzel', serif;
+}
+.scroll-line {
+  width: 1px; height: 40px;
+  background: linear-gradient(180deg, var(--gold), transparent);
+  animation: scroll-pulse 2s infinite;
+}
+@keyframes scroll-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── 分隔線 ── */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), rgba(183,110,121,0.5), transparent);
+  margin: 0 60px;
+  opacity: 0.4;
+}
+
+/* ── SECTION BASE ── */
+section { padding: 100px 60px; }
+.section-tag {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 5px;
+  color: var(--gold);
+  margin-bottom: 16px;
+  opacity: 0.8;
+}
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(36px, 4vw, 56px);
+  font-weight: 300;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+.section-title-zh {
+  font-family: 'Noto Serif TC', serif;
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 300;
+  color: var(--gold3);
+  letter-spacing: 4px;
+  margin-bottom: 24px;
+}
+
+/* ── BRAND STORY ── */
+#story {
+  background: var(--navy2);
+  position: relative;
+  overflow: hidden;
+}
+#story::before {
+  content: '易';
+  position: absolute;
+  font-family: 'Noto Serif TC', serif;
+  font-size: 400px;
+  color: rgba(212,175,55,0.02);
+  right: -60px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  line-height: 1;
+}
+.story-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.story-text p {
+  font-size: 15px;
+  line-height: 2.2;
+  color: rgba(248,244,238,0.7);
+  margin-bottom: 20px;
+  font-weight: 300;
+}
+.story-text p strong {
+  color: var(--gold3);
+  font-weight: 400;
+}
+.story-values {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 40px;
+}
+.value-item {
+  padding: 20px;
+  border: 1px solid var(--border);
+  background: rgba(212,175,55,0.02);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+.value-item::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.value-item:hover { border-color: rgba(212,175,55,0.3); }
+.value-item:hover::before { opacity: 1; }
+.value-icon { font-size: 24px; margin-bottom: 8px; }
+.value-name {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 13px;
+  color: var(--gold3);
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+.value-desc { font-size: 12px; color: var(--muted); line-height: 1.8; }
+.story-visual {
+  position: relative;
+}
+.story-frame {
+  aspect-ratio: 3/4;
+  background: linear-gradient(135deg, var(--navy3), var(--navy4));
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.story-frame::before {
+  content: '';
+  position: absolute; inset: 12px;
+  border: 1px solid rgba(212,175,55,0.1);
+}
+.story-frame-inner {
+  text-align: center;
+}
+.story-frame-icon {
+  font-size: 80px;
+  display: block;
+  margin-bottom: 16px;
+  filter: drop-shadow(0 0 20px rgba(212,175,55,0.3));
+}
+.story-frame-text {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 13px;
+  color: var(--gold3);
+  letter-spacing: 4px;
+  font-weight: 300;
+}
+.story-badge {
+  position: absolute;
+  bottom: -20px; right: -20px;
+  width: 120px; height: 120px;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  border-radius: 50%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  box-shadow: 0 8px 32px rgba(212,175,55,0.4);
+}
+.story-badge-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--navy);
+  line-height: 1;
+}
+.story-badge-text {
+  font-size: 9px;
+  color: var(--navy);
+  letter-spacing: 2px;
+  font-family: 'Noto Serif TC', serif;
+}
+
+/* ── PRODUCTS ── */
+#products {
+  background: var(--navy);
+}
+.products-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+.products-tabs {
+  display: flex; justify-content: center; gap: 0;
+  margin-bottom: 48px;
+  border: 1px solid var(--border);
+  display: inline-flex;
+  left: 50%;
+  position: relative;
+  transform: translateX(-50%);
+}
+.product-tab {
+  padding: 12px 32px;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  font-family: 'Noto Serif TC', serif;
+  transition: all 0.2s;
+  border-right: 1px solid var(--border);
+}
+.product-tab:last-child { border-right: none; }
+.product-tab.active {
+  background: rgba(212,175,55,0.1);
+  color: var(--gold);
+}
+.product-tab:hover:not(.active) { color: var(--gold3); }
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.product-card {
+  background: var(--navy2);
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.4s;
+  group: true;
+}
+.product-card:hover {
+  border-color: rgba(212,175,55,0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px rgba(212,175,55,0.05);
+}
+.product-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.product-card:hover::before { opacity: 1; }
+.product-img {
+  aspect-ratio: 1;
+  background: linear-gradient(135deg, var(--navy3), var(--navy4));
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.product-img-inner {
+  font-size: 64px;
+  filter: drop-shadow(0 0 16px rgba(212,175,55,0.3));
+  transition: transform 0.4s;
+}
+.product-card:hover .product-img-inner {
+  transform: scale(1.1);
+}
+.product-img-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 60%, rgba(6,12,26,0.8));
+}
+.product-badge {
+  position: absolute; top: 12px; right: 12px;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: var(--navy);
+  font-size: 9px;
+  letter-spacing: 2px;
+  padding: 4px 10px;
+  font-family: 'Cinzel', serif;
+}
+.product-info {
+  padding: 20px 24px;
+}
+.product-cat {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--gold);
+  font-family: 'Cinzel', serif;
+  margin-bottom: 6px;
+}
+.product-name {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 16px;
+  font-weight: 400;
+  margin-bottom: 6px;
+  color: var(--white);
+  letter-spacing: 1px;
+}
+.product-desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.8;
+  margin-bottom: 14px;
+}
+.product-price {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  color: var(--gold);
+  font-weight: 300;
+}
+.product-price span {
+  font-size: 13px;
+  color: var(--muted);
+  font-family: 'Noto Sans TC', sans-serif;
+  margin-left: 6px;
+}
+
+/* ── ENERGY ── */
+#energy {
+  background: var(--navy2);
+  position: relative;
+  overflow: hidden;
+}
+.energy-header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+.energy-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto 60px;
+}
+.energy-card {
+  padding: 32px 24px;
+  border: 1px solid var(--border);
+  background: rgba(212,175,55,0.01);
+  text-align: center;
+  position: relative;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.energy-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 20%; right: 20%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.energy-card:hover { border-color: rgba(212,175,55,0.3); background: rgba(212,175,55,0.03); }
+.energy-card:hover::after { opacity: 1; }
+.energy-icon {
+  font-size: 40px;
+  display: block;
+  margin: 0 auto 16px;
+  filter: drop-shadow(0 0 12px rgba(212,175,55,0.4));
+}
+.energy-crystal {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 16px;
+  color: var(--gold3);
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+.energy-property {
+  font-size: 11px;
+  color: var(--gold);
+  letter-spacing: 3px;
+  font-family: 'Cinzel', serif;
+  margin-bottom: 12px;
+}
+.energy-desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.9;
+}
+.energy-cta {
+  text-align: center;
+}
+
+/* ── NEWS ── */
+#news {
+  background: var(--navy);
+}
+.news-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 48px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.news-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.news-card {
+  border: 1px solid var(--border);
+  background: var(--navy2);
+  overflow: hidden;
+  position: relative;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.news-card:hover {
+  border-color: rgba(212,175,55,0.3);
+  transform: translateY(-3px);
+}
+.news-card-img {
+  background: linear-gradient(135deg, var(--navy3), var(--navy4));
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.news-card:first-child .news-card-img { height: 240px; }
+.news-card:not(:first-child) .news-card-img { height: 160px; }
+.news-card-emoji {
+  font-size: 48px;
+  filter: drop-shadow(0 0 12px rgba(212,175,55,0.3));
+}
+.news-card-body { padding: 20px; }
+.news-date {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--gold);
+  font-family: 'Cinzel', serif;
+  margin-bottom: 8px;
+}
+.news-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.6;
+  margin-bottom: 8px;
+  color: var(--white);
+}
+.news-card:not(:first-child) .news-title { font-size: 13px; }
+.news-excerpt {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+.news-card:not(:first-child) .news-excerpt { display: none; }
+
+/* ── CONTACT ── */
+#contact {
+  background: var(--navy2);
+  position: relative;
+}
+#contact::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 60% at 80% 50%, rgba(212,175,55,0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  max-width: 1200px;
+  margin: 0 auto;
+  align-items: start;
+}
+.contact-info { position: relative; z-index: 1; }
+.contact-items {
+  display: flex; flex-direction: column; gap: 24px;
+  margin: 40px 0;
+}
+.contact-item {
+  display: flex; gap: 16px; align-items: flex-start;
+}
+.contact-item-icon {
+  width: 40px; height: 40px;
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  background: rgba(212,175,55,0.03);
+}
+.contact-item-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--gold);
+  font-family: 'Cinzel', serif;
+  margin-bottom: 4px;
+}
+.contact-item-value {
+  font-size: 14px;
+  color: var(--gold3);
+  font-family: 'Noto Serif TC', serif;
+  font-weight: 300;
+}
+.social-links {
+  display: flex; gap: 12px; margin-top: 8px;
+}
+.social-link {
+  padding: 10px 20px;
+  border: 1px solid var(--border);
+  color: var(--gold3);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-decoration: none;
+  font-family: 'Noto Serif TC', serif;
+  transition: all 0.25s;
+  display: flex; align-items: center; gap: 8px;
+}
+.social-link:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(212,175,55,0.05);
+}
+.contact-form { position: relative; z-index: 1; }
+.form-group { margin-bottom: 20px; }
+.form-label {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--gold);
+  font-family: 'Cinzel', serif;
+  margin-bottom: 8px;
+}
+.form-input {
+  width: 100%;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  color: var(--white);
+  font-size: 14px;
+  font-family: 'Noto Sans TC', sans-serif;
+  transition: border-color 0.2s;
+  outline: none;
+  font-weight: 300;
+}
+.form-input::placeholder { color: rgba(248,244,238,0.25); }
+.form-input:focus { border-color: rgba(212,175,55,0.5); }
+.form-textarea {
+  resize: vertical; min-height: 120px;
+}
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23D4AF37' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  cursor: pointer;
+}
+.form-select option { background: var(--navy2); }
+.form-submit {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  border: none;
+  color: var(--navy);
+  font-size: 12px;
+  letter-spacing: 4px;
+  font-family: 'Noto Serif TC', serif;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.form-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(212,175,55,0.4);
+}
+
+/* ── FOOTER ── */
+footer {
+  background: var(--navy);
+  border-top: 1px solid var(--border);
+  padding: 60px;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px;
+  max-width: 1200px;
+  margin: 0 auto 48px;
+}
+.footer-brand-logo {
+  font-family: 'Cinzel', serif;
+  font-size: 18px;
+  color: var(--gold);
+  letter-spacing: 4px;
+  margin-bottom: 6px;
+}
+.footer-brand-sub {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 10px;
+  color: var(--gold3);
+  letter-spacing: 5px;
+  font-weight: 300;
+  margin-bottom: 20px;
+}
+.footer-brand-desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 2;
+  max-width: 240px;
+  font-weight: 300;
+}
+.footer-col-title {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-links a {
+  font-size: 12px;
+  color: var(--muted);
+  text-decoration: none;
+  font-family: 'Noto Serif TC', serif;
+  font-weight: 300;
+  transition: color 0.2s;
+  letter-spacing: 1px;
+}
+.footer-links a:hover { color: var(--gold3); }
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.footer-copy {
+  font-size: 11px;
+  color: var(--muted);
+  font-family: 'Noto Serif TC', serif;
+  font-weight: 300;
+}
+.footer-social {
+  display: flex; gap: 16px;
+}
+.footer-social a {
+  font-size: 11px;
+  color: var(--muted);
+  text-decoration: none;
+  letter-spacing: 2px;
+  font-family: 'Cinzel', serif;
+  transition: color 0.2s;
+}
+.footer-social a:hover { color: var(--gold); }
+
+/* ── 動態效果 ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s, transform 0.7s;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── RWD ── */
+@media (max-width: 1024px) {
+  nav { padding: 16px 32px; }
+  .nav-links { gap: 24px; }
+  section { padding: 80px 32px; }
+  .story-grid, .contact-grid { grid-template-columns: 1fr; gap: 48px; }
+  .products-grid { grid-template-columns: repeat(2, 1fr); }
+  .energy-grid { grid-template-columns: repeat(2, 1fr); }
+  .news-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  nav { padding: 16px 20px; }
+  .nav-links, .nav-cta { display: none; }
+  section { padding: 60px 20px; }
+  .hero-btns { flex-direction: column; }
+  .products-grid { grid-template-columns: 1fr; }
+  .energy-grid { grid-template-columns: 1fr 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">
+    iiluckyART
+    <span>易藍琪生技文創美學</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#story">品牌故事</a></li>
+    <li><a href="#products">商品系列</a></li>
+    <li><a href="#energy">能量飾品</a></li>
+    <li><a href="#news">最新消息</a></li>
+    <li><a href="#contact">預約諮詢</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">立即諮詢</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-particles" id="particles"></div>
+  <div class="hero-content">
+    <div class="hero-tag">EASTERN ENERGY JEWELRY</div>
+    <h1 class="hero-title"><em>iilucky</em>ART</h1>
+    <div class="hero-subtitle-zh">易藍琪生技文創美學</div>
+    <p class="hero-desc">融合東方智慧與自然能量，每一件飾品皆承載宇宙的靈動之氣，為您的生命帶來平衡與美麗。</p>
+    <div class="hero-btns">
+      <a href="#products" class="btn-primary">探索系列</a>
+      <a href="#story" class="btn-ghost">品牌故事</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>SCROLL</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- BRAND STORY -->
+<section id="story">
+  <div class="story-grid">
+    <div class="story-text reveal">
+      <div class="section-tag">BRAND STORY</div>
+      <h2 class="section-title">The Art of<br><em style="color:var(--gold)">Eastern Energy</em></h2>
+      <div class="section-title-zh">品牌故事</div>
+      <p>易藍琪，源自創辦人對<strong>東方文化與自然能量</strong>的深厚情感。我們相信，每一顆水晶礦石都承載著大地的記憶，每一件飾品都是能量的載體。</p>
+      <p>從台灣出發，我們精選全球頂級水晶礦石，結合東方美學設計，創作出兼具視覺美感與能量功效的珠寶飾品。每一件作品，都是我們對<strong>美與靈性</strong>的詮釋。</p>
+      <div class="story-values">
+        <div class="value-item">
+          <div class="value-icon">🌙</div>
+          <div class="value-name">天然礦石</div>
+          <div class="value-desc">嚴選頂級天然水晶，保留礦石原始能量</div>
+        </div>
+        <div class="value-item">
+          <div class="value-icon">✨</div>
+          <div class="value-name">手工製作</div>
+          <div class="value-desc">每件飾品獨一無二，注入匠人心意</div>
+        </div>
+        <div class="value-item">
+          <div class="value-icon">🧘</div>
+          <div class="value-name">能量淨化</div>
+          <div class="value-desc">出貨前進行完整的能量淨化儀式</div>
+        </div>
+        <div class="value-item">
+          <div class="value-icon">🌿</div>
+          <div class="value-name">東方美學</div>
+          <div class="value-desc">融合東方智慧，設計兼具美感與靈性</div>
+        </div>
+      </div>
+    </div>
+    <div class="story-visual reveal">
+      <div class="story-frame">
+        <div class="story-frame-inner">
+          <span class="story-frame-icon">💎</span>
+          <div class="story-frame-text">易藍琪 ART</div>
+        </div>
+      </div>
+      <div class="story-badge">
+        <div class="story-badge-num">3+</div>
+        <div class="story-badge-text">YEARS</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PRODUCTS -->
+<section id="products">
+  <div class="products-header">
+    <div class="section-tag">COLLECTIONS</div>
+    <h2 class="section-title">Signature <em style="color:var(--gold)">Collections</em></h2>
+    <div class="section-title-zh">精選商品系列</div>
+  </div>
+  <div style="text-align:center;">
+    <div class="products-tabs">
+      <button class="product-tab active" onclick="filterProducts('all', this)">全部</button>
+      <button class="product-tab" onclick="filterProducts('bracelet', this)">手鍊</button>
+      <button class="product-tab" onclick="filterProducts('necklace', this)">項鍊</button>
+      <button class="product-tab" onclick="filterProducts('spray', this)">噴霧</button>
+      <button class="product-tab" onclick="filterProducts('crystal', this)">礦石</button>
+    </div>
+  </div>
+  <div class="products-grid" id="products-grid">
+    <div class="product-card reveal" data-cat="bracelet">
+      <div class="product-img">
+        <div class="product-img-inner">💙</div>
+        <div class="product-img-overlay"></div>
+        <div class="product-badge">HOT</div>
+      </div>
+      <div class="product-info">
+        <div class="product-cat">BRACELET</div>
+        <div class="product-name">藍琪能量手鍊</div>
+        <div class="product-desc">天然藍晶石，增強溝通能力與自我表達，帶來平靜與清晰</div>
+        <div class="product-price">$2,400 <span>起</span></div>
+      </div>
+    </div>
+    <div class="product-card reveal" data-cat="bracelet">
+      <div class="product-img">
+        <div class="product-img-inner">💜</div>
+        <div class="product-img-overlay"></div>
+        <div class="product-badge">NEW</div>
+      </div>
+      <div class="product-info">
+        <div class="product-cat">BRACELET</div>
+        <div class="product-name">紫水晶耳環</div>
+        <div class="product-desc">天然紫水晶，提升靈性感知，促進內心平靜與智慧</div>
+        <div class="product-price">$2,100 <span>起</span></div>
+      </div>
+    </div>
+    <div class="product-card reveal" data-cat="spray">
+      <div class="product-img">
+        <div class="product-img-inner">🌿</div>
+        <div class="product-img-overlay"></div>
+      </div>
+      <div class="product-info">
+        <div class="product-cat">SPRAY</div>
+        <div class="product-name">東方艾草噴霧</div>
+        <div class="product-desc">複方能量轉換噴霧，結合艾草精華，淨化空間與身心</div>
+        <div class="product-price">$1,280 <span>起</span></div>
+      </div>
+    </div>
+    <div class="product-card reveal" data-cat="necklace">
+      <div class="product-img">
+        <div class="product-img-inner">✨</div>
+        <div class="product-img-overlay"></div>
+        <div class="product-badge">精選</div>
+      </div>
+      <div class="product-info">
+        <div class="product-cat">NECKLACE</div>
+        <div class="product-name">琥珀黃金胸針</div>
+        <div class="product-desc">天然琥珀配純金飾件，招財納福，守護正能量</div>
+        <div class="product-price">$3,200 <span>起</span></div>
+      </div>
+    </div>
+    <div class="product-card reveal" data-cat="bracelet">
+      <div class="product-img">
+        <div class="product-img-inner">🔮</div>
+        <div class="product-img-overlay"></div>
+      </div>
+      <div class="product-info">
+        <div class="product-cat">BRACELET</div>
+        <div class="product-name">白水晶球</div>
+        <div class="product-desc">頂級白水晶，淨化磁場，增強直覺與心靈感應能力</div>
+        <div class="product-price">$3,600 <span>起</span></div>
+      </div>
+    </div>
+    <div class="product-card reveal" data-cat="crystal">
+      <div class="product-img">
+        <div class="product-img-inner">🌸</div>
+        <div class="product-img-overlay"></div>
+      </div>
+      <div class="product-info">
+        <div class="product-cat">CRYSTAL</div>
+        <div class="product-name">粉晶項鍊</div>
+        <div class="product-desc">天然粉水晶，吸引愛情與人緣，柔化心靈帶來溫暖</div>
+        <div class="product-price">$2,800 <span>起</span></div>
+      </div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:48px;">
+    <a href="#contact" class="btn-ghost">查看完整系列 →</a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ENERGY -->
+<section id="energy">
+  <div class="energy-header reveal">
+    <div class="section-tag">ENERGY GUIDE</div>
+    <h2 class="section-title">Crystal <em style="color:var(--gold)">Energy</em> Guide</h2>
+    <div class="section-title-zh">能量礦石指南</div>
+    <p style="font-size:14px;color:var(--muted);max-width:480px;margin:0 auto;line-height:2;font-weight:300;">每種礦石都有其獨特的能量頻率，選擇與您共鳴的礦石，開啟能量流動的旅程</p>
+  </div>
+  <div class="energy-grid">
+    <div class="energy-card reveal">
+      <span class="energy-icon">💜</span>
+      <div class="energy-crystal">紫水晶</div>
+      <div class="energy-property">AMETHYST</div>
+      <div class="energy-desc">靈性覺醒・智慧提升<br>促進冥想，增強直覺力，帶來內心平靜與精神清晰</div>
+    </div>
+    <div class="energy-card reveal">
+      <span class="energy-icon">🩵</span>
+      <div class="energy-crystal">藍晶石</div>
+      <div class="energy-property">BLUE KYANITE</div>
+      <div class="energy-desc">溝通表達・心靈連結<br>促進誠實溝通，對齊脈輪，增強心靈感應</div>
+    </div>
+    <div class="energy-card reveal">
+      <span class="energy-icon">🌸</span>
+      <div class="energy-crystal">粉水晶</div>
+      <div class="energy-property">ROSE QUARTZ</div>
+      <div class="energy-desc">愛與慈悲・情感療癒<br>吸引愛情，促進自愛，療癒情感創傷</div>
+    </div>
+    <div class="energy-card reveal">
+      <span class="energy-icon">⚪</span>
+      <div class="energy-crystal">白水晶</div>
+      <div class="energy-property">CLEAR QUARTZ</div>
+      <div class="energy-desc">淨化放大・能量主石<br>放大其他礦石能量，淨化空間，提升振動頻率</div>
+    </div>
+  </div>
+  <div class="energy-cta reveal">
+    <a href="#contact" class="btn-primary">預約能量諮詢</a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- NEWS -->
+<section id="news">
+  <div class="news-header reveal">
+    <div>
+      <div class="section-tag">LATEST NEWS</div>
+      <h2 class="section-title" style="margin-bottom:0">最新 <em style="color:var(--gold)">消息</em></h2>
+    </div>
+    <a href="#" style="font-size:12px;color:var(--gold3);text-decoration:none;letter-spacing:2px;font-family:'Noto Serif TC',serif;border-bottom:1px solid rgba(212,175,55,0.3);padding-bottom:2px;">查看全部 →</a>
+  </div>
+  <div class="news-grid">
+    <div class="news-card reveal">
+      <div class="news-card-img">
+        <div class="news-card-emoji">🌙</div>
+      </div>
+      <div class="news-card-body">
+        <div class="news-date">2026.04.06</div>
+        <div class="news-title">春分能量淨化特別活動｜新品水晶手鍊系列上市</div>
+        <div class="news-excerpt">春分是能量轉換的最佳時機，易藍琪特別推出限量春分能量手鍊，結合天然礦石與東方能量儀式，為您的春季帶來全新的能量啟動...</div>
+      </div>
+    </div>
+    <div class="news-card reveal">
+      <div class="news-card-img">
+        <div class="news-card-emoji">✨</div>
+      </div>
+      <div class="news-card-body">
+        <div class="news-date">2026.03.20</div>
+        <div class="news-title">能量礦石工作坊｜3月台中場次開放報名</div>
+      </div>
+    </div>
+    <div class="news-card reveal">
+      <div class="news-card-img">
+        <div class="news-card-emoji">🌿</div>
+      </div>
+      <div class="news-card-body">
+        <div class="news-date">2026.03.01</div>
+        <div class="news-title">東方艾草複方噴霧｜新配方正式上市</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-grid">
+    <div class="contact-info reveal">
+      <div class="section-tag">CONTACT US</div>
+      <h2 class="section-title">讓我們<br><em style="color:var(--gold)">開始對話</em></h2>
+      <div class="section-title-zh">預約諮詢</div>
+      <div class="contact-items">
+        <div class="contact-item">
+          <div class="contact-item-icon">📍</div>
+          <div>
+            <div class="contact-item-label">LOCATION</div>
+            <div class="contact-item-value">台中市大雅區民族路90號1樓</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">📱</div>
+          <div>
+            <div class="contact-item-label">LINE / PHONE</div>
+            <div class="contact-item-value">+886 930-029-603</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">✉️</div>
+          <div>
+            <div class="contact-item-label">EMAIL</div>
+            <div class="contact-item-value">iilucky24art@gmail.com</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">🕐</div>
+          <div>
+            <div class="contact-item-label">HOURS</div>
+            <div class="contact-item-value">週二至週日 11:00 — 19:00</div>
+          </div>
+        </div>
+      </div>
+      <div class="social-links">
+        <a href="#" class="social-link">📘 Facebook</a>
+        <a href="#" class="social-link">📸 Instagram</a>
+        <a href="#" class="social-link">🎵 TikTok</a>
+      </div>
+    </div>
+    <div class="contact-form reveal">
+      <form onsubmit="submitForm(event)">
+        <div class="form-group">
+          <label class="form-label">YOUR NAME</label>
+          <input type="text" class="form-input" placeholder="您的姓名" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">PHONE / LINE</label>
+          <input type="tel" class="form-input" placeholder="聯絡電話或LINE ID">
+        </div>
+        <div class="form-group">
+          <label class="form-label">EMAIL</label>
+          <input type="email" class="form-input" placeholder="電子信箱">
+        </div>
+        <div class="form-group">
+          <label class="form-label">SERVICE TYPE</label>
+          <select class="form-input form-select">
+            <option value="">請選擇服務類型</option>
+            <option>能量飾品諮詢</option>
+            <option>礦石選購建議</option>
+            <option>客製化珠寶</option>
+            <option>能量工作坊</option>
+            <option>其他</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">MESSAGE</label>
+          <textarea class="form-input form-textarea" placeholder="請描述您的需求或問題..."></textarea>
+        </div>
+        <button type="submit" class="form-submit">送出諮詢申請</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand-logo">iiluckyART</div>
+      <div class="footer-brand-sub">易藍琪生技文創美學</div>
+      <p class="footer-brand-desc">融合東方智慧與自然能量，為您帶來身心靈的平衡與美麗。每一件飾品，都是能量的傳遞。</p>
+    </div>
+    <div>
+      <div class="footer-col-title">COLLECTIONS</div>
+      <ul class="footer-links">
+        <li><a href="#products">水晶手鍊</a></li>
+        <li><a href="#products">能量項鍊</a></li>
+        <li><a href="#products">礦石飾品</a></li>
+        <li><a href="#products">能量噴霧</a></li>
+        <li><a href="#products">系統櫃設計</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">SERVICES</div>
+      <ul class="footer-links">
+        <li><a href="#contact">能量諮詢</a></li>
+        <li><a href="#contact">客製化訂製</a></li>
+        <li><a href="#contact">礦石工作坊</a></li>
+        <li><a href="#contact">企業禮品</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">FOLLOW US</div>
+      <ul class="footer-links">
+        <li><a href="#">Facebook</a></li>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">TikTok</a></li>
+        <li><a href="#">小紅書</a></li>
+        <li><a href="#">Threads</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2024–2026 iilucky ART 易藍琪生技文創美學｜All Rights Reserved</div>
+    <div class="footer-social">
+      <a href="#">FB</a>
+      <a href="#">IG</a>
+      <a href="#">TK</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── 粒子效果 ──
+(function() {
+  const container = document.getElementById('particles');
+  for(let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.top = Math.random() * 100 + '%';
+    p.style.animationDelay = Math.random() * 8 + 's';
+    p.style.animationDuration = (6 + Math.random() * 6) + 's';
+    container.appendChild(p);
+  }
+})();
+
+// ── Nav scroll ──
+window.addEventListener('scroll', function() {
+  const nav = document.getElementById('navbar');
+  nav.classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// ── Scroll reveal ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ── Product filter ──
+function filterProducts(cat, btn) {
+  document.querySelectorAll('.product-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.product-card').forEach(card => {
+    if(cat === 'all' || card.dataset.cat === cat) {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+// ── Form submit ──
+function submitForm(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('.form-submit');
+  btn.textContent = '✓ 已送出，我們將盡快與您聯繫！';
+  btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+  setTimeout(() => {
+    btn.textContent = '送出諮詢申請';
+    btn.style.background = '';
+    e.target.reset();
+  }, 4000);
+}
+</script>
+</body>
+</html>
