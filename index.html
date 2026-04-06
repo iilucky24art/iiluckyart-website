@@ -1454,7 +1454,58 @@ async function initWebsite() {
 }
 
 // 頁面載入後初始化
-window.addEventListener('load', initWebsite);
+window.addEventListener('load', async () => {
+  await applyWebThemeFromDB();
+  await initWebsite();
+});
+
+// 從 Supabase 讀取官網主題並套用
+async function applyWebThemeFromDB() {
+  try {
+    const res = await sbFetch('settings', 'key=eq.web_theme&select=value');
+    if(!res || res.length === 0) return;
+    const theme = JSON.parse(res[0].value);
+    if(!theme) return;
+
+    // 套用 CSS 變數
+    const root = document.documentElement.style;
+    if(theme.bg) {
+      root.setProperty('--navy', theme.bg);
+      // 計算稍亮的變體
+      root.setProperty('--navy2', theme.bg + 'dd');
+      document.body.style.background = theme.bg;
+    }
+    if(theme.primary) {
+      root.setProperty('--gold', theme.primary);
+    }
+    if(theme.text) {
+      root.setProperty('--white', theme.text);
+    }
+
+    // 套用文字內容
+    const heroTitle = document.querySelector('.hero-title');
+    if(heroTitle && theme.heroTitle) {
+      heroTitle.innerHTML = theme.heroTitle.replace('iilucky', '<em>iilucky</em>').replace('ART', 'ART');
+    }
+    const heroSub = document.querySelector('.hero-subtitle-zh');
+    if(heroSub && theme.heroSub) heroSub.textContent = theme.heroSub;
+
+    const heroDesc = document.querySelector('.hero-desc');
+    if(heroDesc && theme.heroDesc) heroDesc.textContent = theme.heroDesc;
+
+    const btnPrimary = document.querySelector('.btn-primary');
+    if(btnPrimary && theme.btnPrimary) btnPrimary.textContent = theme.btnPrimary;
+
+    // 套用字體大小
+    if(theme.titleSize && heroTitle) {
+      heroTitle.style.fontSize = Math.min(parseInt(theme.titleSize), 96) + 'px';
+    }
+
+    console.log('✅ 官網主題已從後台套用');
+  } catch(e) {
+    console.log('使用預設主題');
+  }
+}
 
 // ── SPA Navigation ──
 function showPage(pageId) {
