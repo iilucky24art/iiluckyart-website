@@ -25,7 +25,7 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: auto; }
 
 body {
   background: var(--navy);
@@ -269,6 +269,10 @@ nav.scrolled {
 
 /* ── SECTION BASE ── */
 section { padding: 100px 60px; }
+.page-section { display: none; min-height: calc(100vh - 80px); }
+.page-section.active { display: block; }
+#hero { display: flex; }
+#hero.hidden { display: none; }
 .section-tag {
   font-family: 'Cinzel', serif;
   font-size: 10px;
@@ -930,13 +934,13 @@ footer {
     <span>易藍琪生技文創美學</span>
   </a>
   <ul class="nav-links">
-    <li><a href="#story">品牌故事</a></li>
-    <li><a href="#products">商品系列</a></li>
-    <li><a href="#energy">能量飾品</a></li>
-    <li><a href="#news">最新消息</a></li>
-    <li><a href="#contact">預約諮詢</a></li>
+    <li><a href="#" onclick="showPage('story');return false;" id="nav-story">品牌故事</a></li>
+    <li><a href="#" onclick="showPage('products');return false;" id="nav-products">商品系列</a></li>
+    <li><a href="#" onclick="showPage('energy');return false;" id="nav-energy">能量飾品</a></li>
+    <li><a href="#" onclick="showPage('news');return false;" id="nav-news">最新消息</a></li>
+    <li><a href="#" onclick="showPage('contact');return false;" id="nav-contact">預約諮詢</a></li>
   </ul>
-  <a href="#contact" class="nav-cta">立即諮詢</a>
+  <a href="#" onclick="showPage('contact');return false;" class="nav-cta">立即諮詢</a>
 </nav>
 
 <!-- HERO -->
@@ -950,8 +954,8 @@ footer {
     <div class="hero-subtitle-zh">易藍琪生技文創美學</div>
     <p class="hero-desc">融合東方智慧與自然能量，每一件飾品皆承載宇宙的靈動之氣，為您的生命帶來平衡與美麗。</p>
     <div class="hero-btns">
-      <a href="#products" class="btn-primary">探索系列</a>
-      <a href="#story" class="btn-ghost">品牌故事</a>
+      <a href="#" onclick="showPage('products');return false;" class="btn-primary">探索系列</a>
+      <a href="#" onclick="showPage('story');return false;" class="btn-ghost">品牌故事</a>
     </div>
   </div>
   <div class="hero-scroll">
@@ -960,10 +964,10 @@ footer {
   </div>
 </section>
 
-<div class="divider"></div>
+<div class="divider page-divider" style="display:none;"></div>
 
 <!-- BRAND STORY -->
-<section id="story">
+<section id="story" class="page-section">
   <div class="story-grid">
     <div class="story-text reveal">
       <div class="section-tag">BRAND STORY</div>
@@ -1009,10 +1013,10 @@ footer {
   </div>
 </section>
 
-<div class="divider"></div>
+<div class="divider page-divider" style="display:none;"></div>
 
 <!-- PRODUCTS -->
-<section id="products">
+<section id="products" class="page-section">
   <div class="products-header">
     <div class="section-tag">COLLECTIONS</div>
     <h2 class="section-title">Signature <em style="color:var(--gold)">Collections</em></h2>
@@ -1105,14 +1109,14 @@ footer {
     </div>
   </div>
   <div style="text-align:center;margin-top:48px;">
-    <a href="#contact" class="btn-ghost">查看完整系列 →</a>
+    <a href="#" onclick="showPage('contact');return false;" class="btn-ghost">查看完整系列 →</a>
   </div>
 </section>
 
-<div class="divider"></div>
+<div class="divider page-divider" style="display:none;"></div>
 
 <!-- ENERGY -->
-<section id="energy">
+<section id="energy" class="page-section">
   <div class="energy-header reveal">
     <div class="section-tag">ENERGY GUIDE</div>
     <h2 class="section-title">Crystal <em style="color:var(--gold)">Energy</em> Guide</h2>
@@ -1146,14 +1150,14 @@ footer {
     </div>
   </div>
   <div class="energy-cta reveal">
-    <a href="#contact" class="btn-primary">預約能量諮詢</a>
+    <a href="#" onclick="showPage('contact');return false;" class="btn-primary">預約能量諮詢</a>
   </div>
 </section>
 
-<div class="divider"></div>
+<div class="divider page-divider" style="display:none;"></div>
 
 <!-- NEWS -->
-<section id="news">
+<section id="news" class="page-section">
   <div class="news-header reveal">
     <div>
       <div class="section-tag">LATEST NEWS</div>
@@ -1193,10 +1197,10 @@ footer {
   </div>
 </section>
 
-<div class="divider"></div>
+<div class="divider page-divider" style="display:none;"></div>
 
 <!-- CONTACT -->
-<section id="contact">
+<section id="contact" class="page-section">
   <div class="contact-grid">
     <div class="contact-info reveal">
       <div class="section-tag">CONTACT US</div>
@@ -1284,20 +1288,20 @@ footer {
     <div>
       <div class="footer-col-title">COLLECTIONS</div>
       <ul class="footer-links">
-        <li><a href="#products">水晶手鍊</a></li>
-        <li><a href="#products">能量項鍊</a></li>
-        <li><a href="#products">礦石飾品</a></li>
-        <li><a href="#products">能量噴霧</a></li>
-        <li><a href="#products">系統櫃設計</a></li>
+        <li><a href="#" onclick="showPage('products');return false;">水晶手鍊</a></li>
+        <li><a href="#" onclick="showPage('products');return false;">能量項鍊</a></li>
+        <li><a href="#" onclick="showPage('products');return false;">礦石飾品</a></li>
+        <li><a href="#" onclick="showPage('products');return false;">能量噴霧</a></li>
+        <li><a href="#" onclick="showPage('products');return false;">系統櫃設計</a></li>
       </ul>
     </div>
     <div>
       <div class="footer-col-title">SERVICES</div>
       <ul class="footer-links">
-        <li><a href="#contact">能量諮詢</a></li>
-        <li><a href="#contact">客製化訂製</a></li>
-        <li><a href="#contact">礦石工作坊</a></li>
-        <li><a href="#contact">企業禮品</a></li>
+        <li><a href="#" onclick="showPage('contact');return false;">能量諮詢</a></li>
+        <li><a href="#" onclick="showPage('contact');return false;">客製化訂製</a></li>
+        <li><a href="#" onclick="showPage('contact');return false;">礦石工作坊</a></li>
+        <li><a href="#" onclick="showPage('contact');return false;">企業禮品</a></li>
       </ul>
     </div>
     <div>
@@ -1364,6 +1368,54 @@ function filterProducts(cat, btn) {
     }
   });
 }
+
+// ── SPA Navigation ──
+function showPage(pageId) {
+  // Hide hero
+  const hero = document.getElementById('hero');
+  const heroScrollBtn = document.querySelector('.hero-scroll');
+
+  // Hide all sections
+  document.querySelectorAll('.page-section').forEach(s => {
+    s.classList.remove('active');
+  });
+
+  if(pageId === 'home' || !pageId) {
+    // Show hero
+    if(hero) { hero.style.display = 'flex'; }
+    updateNavActive(null);
+  } else {
+    // Hide hero
+    if(hero) { hero.style.display = 'none'; }
+    // Show target section
+    const target = document.getElementById(pageId);
+    if(target) {
+      target.classList.add('active');
+      window.scrollTo(0, 0);
+    }
+    updateNavActive(pageId);
+  }
+}
+
+function updateNavActive(pageId) {
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.style.color = 'var(--gold3)';
+    a.style.borderBottom = 'none';
+  });
+  if(pageId) {
+    const activeLink = document.getElementById('nav-' + pageId);
+    if(activeLink) {
+      activeLink.style.color = 'var(--gold)';
+      activeLink.style.borderBottom = '1px solid var(--gold)';
+    }
+  }
+}
+
+// Logo click = home
+document.querySelector('.nav-logo').addEventListener('click', function(e) {
+  e.preventDefault();
+  showPage('home');
+});
 
 // ── Form submit ──
 function submitForm(e) {
