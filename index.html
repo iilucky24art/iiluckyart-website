@@ -938,6 +938,7 @@ footer {
     <li><a href="#" onclick="showPage('products');return false;" id="nav-products">商品系列</a></li>
     <li><a href="#" onclick="showPage('energy');return false;" id="nav-energy">能量飾品</a></li>
     <li><a href="#" onclick="showPage('news');return false;" id="nav-news">最新消息</a></li>
+    <li><a href="#" onclick="showPage('courses');return false;" id="nav-courses">線上課程</a></li>
     <li><a href="#" onclick="showPage('contact');return false;" id="nav-contact">預約諮詢</a></li>
   </ul>
   <a href="#" onclick="showPage('contact');return false;" class="nav-cta">立即諮詢</a>
@@ -1277,6 +1278,468 @@ footer {
   </div>
 </section>
 
+<!-- COURSES -->
+<section id="courses" class="page-section" style="padding:100px 60px;background:var(--navy);">
+
+  <!-- Header -->
+  <div style="text-align:center;margin-bottom:60px;">
+    <div class="section-tag">ONLINE COURSES</div>
+    <h2 class="section-title">線上 <em style="color:var(--gold)">開課平台</em></h2>
+    <div class="section-title-zh">易藍琪能量學院</div>
+    <p style="font-size:14px;color:var(--muted);max-width:480px;margin:0 auto;line-height:2;font-weight:300;">結合東方智慧與現代教學，帶您深入能量飾品、水晶療癒與風水命理的奧秘世界</p>
+  </div>
+
+  <!-- 課程分類 Tab -->
+  <div style="text-align:center;margin-bottom:48px;">
+    <div style="display:inline-flex;border:1px solid var(--border);border-radius:4px;overflow:hidden;">
+      <button onclick="filterCourses('all',this)" class="course-tab active-tab" style="padding:8px 20px;border:none;background:var(--gold);color:#000;cursor:pointer;font-size:12px;letter-spacing:2px;font-family:'Noto Serif TC',serif;font-weight:700;transition:all 0.2s;">全部</button>
+      <button onclick="filterCourses('energy',this)" class="course-tab" style="padding:8px 20px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:12px;letter-spacing:2px;font-family:'Noto Serif TC',serif;border-left:1px solid var(--border);transition:all 0.2s;">能量水晶</button>
+      <button onclick="filterCourses('diy',this)" class="course-tab" style="padding:8px 20px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:12px;letter-spacing:2px;font-family:'Noto Serif TC',serif;border-left:1px solid var(--border);transition:all 0.2s;">珠寶DIY</button>
+      <button onclick="filterCourses('fengshui',this)" class="course-tab" style="padding:8px 20px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:12px;letter-spacing:2px;font-family:'Noto Serif TC',serif;border-left:1px solid var(--border);transition:all 0.2s;">風水命理</button>
+    </div>
+  </div>
+
+  <!-- 課程列表 -->
+  <div id="courses-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1200px;margin:0 auto 60px;">
+
+    <!-- 課程卡片 1 -->
+    <div class="course-card reveal" data-cat="energy" style="background:var(--navy2);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all 0.3s;cursor:pointer;">
+      <div style="position:relative;height:180px;background:linear-gradient(135deg,#0d1628,#1a2d4a);display:flex;align-items:center;justify-content:center;">
+        <div style="font-size:60px;filter:drop-shadow(0 0 20px rgba(212,175,55,0.4));">💎</div>
+        <div style="position:absolute;top:12px;right:12px;background:var(--gold);color:#000;font-size:10px;letter-spacing:2px;padding:3px 10px;font-family:'Cinzel',serif;">LIVE</div>
+        <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
+      </div>
+      <div style="padding:20px;">
+        <div style="font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:8px;">ENERGY CRYSTAL</div>
+        <div style="font-family:'Noto Serif TC',serif;font-size:16px;margin-bottom:8px;color:var(--white);">水晶能量入門工作坊</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:14px;">認識各種水晶礦石的能量屬性，學習如何選擇、淨化與使用能量飾品，開啟您的能量療癒之旅。</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <div>
+            <div style="font-size:11px;color:var(--muted);">課程費用</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold);">$2,800</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:11px;color:var(--muted);">下期開課</div>
+            <div style="font-size:13px;color:var(--white);font-family:'Noto Serif TC',serif;">2026.05.10</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button onclick="openCourseModal('water-crystal')" style="flex:1;padding:10px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:4px;color:#000;font-size:12px;letter-spacing:2px;cursor:pointer;font-family:'Noto Serif TC',serif;font-weight:600;">立即報名</button>
+          <button onclick="openCourseDetail('water-crystal')" style="padding:10px 14px;background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--muted);font-size:12px;cursor:pointer;">詳情</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 課程卡片 2 -->
+    <div class="course-card reveal" data-cat="diy" style="background:var(--navy2);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all 0.3s;cursor:pointer;">
+      <div style="position:relative;height:180px;background:linear-gradient(135deg,#1a0d10,#2d1418);display:flex;align-items:center;justify-content:center;">
+        <div style="font-size:60px;filter:drop-shadow(0 0 20px rgba(183,110,121,0.4));">🌹</div>
+        <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--rose),transparent);"></div>
+      </div>
+      <div style="padding:20px;">
+        <div style="font-size:10px;letter-spacing:3px;color:var(--rose);font-family:'Cinzel',serif;margin-bottom:8px;">JEWELRY DIY</div>
+        <div style="font-family:'Noto Serif TC',serif;font-size:16px;margin-bottom:8px;color:var(--white);">能量手鍊 DIY 工作坊</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:14px;">親手製作專屬能量手鍊，在老師的指導下挑選適合自己的礦石組合，注入個人意念與能量。</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <div>
+            <div style="font-size:11px;color:var(--muted);">課程費用</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold);">$3,500</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:11px;color:var(--muted);">下期開課</div>
+            <div style="font-size:13px;color:var(--white);font-family:'Noto Serif TC',serif;">2026.05.17</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button onclick="openCourseModal('diy-bracelet')" style="flex:1;padding:10px;background:linear-gradient(135deg,#B76E79,#c9956a);border:none;border-radius:4px;color:#fff;font-size:12px;letter-spacing:2px;cursor:pointer;font-family:'Noto Serif TC',serif;font-weight:600;">立即報名</button>
+          <button onclick="openCourseDetail('diy-bracelet')" style="padding:10px 14px;background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--muted);font-size:12px;cursor:pointer;">詳情</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 課程卡片 3 -->
+    <div class="course-card reveal" data-cat="fengshui" style="background:var(--navy2);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all 0.3s;cursor:pointer;">
+      <div style="position:relative;height:180px;background:linear-gradient(135deg,#0d0a1a,#1a0d2d);display:flex;align-items:center;justify-content:center;">
+        <div style="font-size:60px;filter:drop-shadow(0 0 20px rgba(167,139,250,0.4));">⭐</div>
+        <div style="position:absolute;top:12px;right:12px;background:#7c3aed;color:#fff;font-size:10px;letter-spacing:2px;padding:3px 10px;font-family:'Cinzel',serif;">線上</div>
+        <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#a78bfa,transparent);"></div>
+      </div>
+      <div style="padding:20px;">
+        <div style="font-size:10px;letter-spacing:3px;color:#a78bfa;font-family:'Cinzel',serif;margin-bottom:8px;">PURPLE STAR</div>
+        <div style="font-family:'Noto Serif TC',serif;font-size:16px;margin-bottom:8px;color:var(--white);">紫微斗數入門班</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:14px;">學習紫微斗數基礎，解讀自己的命盤，了解流年運勢與人生格局，結合能量飾品提升運氣。</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <div>
+            <div style="font-size:11px;color:var(--muted);">課程費用</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold);">$5,800</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:11px;color:var(--muted);">下期開課</div>
+            <div style="font-size:13px;color:var(--white);font-family:'Noto Serif TC',serif;">2026.06.01</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button onclick="openCourseModal('purple-star')" style="flex:1;padding:10px;background:linear-gradient(135deg,#7c3aed,#a78bfa);border:none;border-radius:4px;color:#fff;font-size:12px;letter-spacing:2px;cursor:pointer;font-family:'Noto Serif TC',serif;font-weight:600;">立即報名</button>
+          <button onclick="openCourseDetail('purple-star')" style="padding:10px 14px;background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--muted);font-size:12px;cursor:pointer;">詳情</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 課程卡片 4 - 直播 -->
+    <div class="course-card reveal" data-cat="energy" style="background:var(--navy2);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all 0.3s;">
+      <div style="position:relative;height:180px;background:linear-gradient(135deg,#0a1a0d,#0d2414);display:flex;align-items:center;justify-content:center;">
+        <div style="font-size:60px;filter:drop-shadow(0 0 20px rgba(16,185,129,0.4));">🌿</div>
+        <div style="position:absolute;top:12px;left:12px;background:#ef4444;color:#fff;font-size:10px;padding:3px 10px;font-family:'Cinzel',serif;animation:pulse 2s infinite;">● 直播中</div>
+        <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#10b981,transparent);"></div>
+      </div>
+      <div style="padding:20px;">
+        <div style="font-size:10px;letter-spacing:3px;color:#10b981;font-family:'Cinzel',serif;margin-bottom:8px;">LIVE STREAMING</div>
+        <div style="font-family:'Noto Serif TC',serif;font-size:16px;margin-bottom:8px;color:var(--white);">艾草能量淨化直播課</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:14px;">每週四晚間直播，教您如何使用東方艾草進行空間與身心淨化，免費提問互動。</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <div>
+            <div style="font-size:11px;color:var(--muted);">參加費用</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:#10b981;">免費</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:11px;color:var(--muted);">每週</div>
+            <div style="font-size:13px;color:var(--white);font-family:'Noto Serif TC',serif;">週四 20:00</div>
+          </div>
+        </div>
+        <button onclick="window.open('https://www.facebook.com','_blank')" style="width:100%;padding:10px;background:linear-gradient(135deg,#1877f2,#0c5ac4);border:none;border-radius:4px;color:#fff;font-size:12px;letter-spacing:2px;cursor:pointer;font-family:'Noto Serif TC',serif;">📺 加入直播</button>
+      </div>
+    </div>
+
+    <!-- 課程卡片 5 -->
+    <div class="course-card reveal" data-cat="energy" style="background:var(--navy2);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all 0.3s;">
+      <div style="position:relative;height:180px;background:linear-gradient(135deg,#1a1207,#2d2010);display:flex;align-items:center;justify-content:center;">
+        <div style="font-size:60px;filter:drop-shadow(0 0 20px rgba(212,175,55,0.4));">🏆</div>
+        <div style="position:absolute;top:12px;right:12px;background:var(--gold);color:#000;font-size:10px;letter-spacing:2px;padding:3px 10px;font-family:'Cinzel',serif;">影片課</div>
+        <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
+      </div>
+      <div style="padding:20px;">
+        <div style="font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:8px;">VIDEO COURSE</div>
+        <div style="font-family:'Noto Serif TC',serif;font-size:16px;margin-bottom:8px;color:var(--white);">能量師進階認證課程</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:14px;">完整的能量師養成課程，包含12堂影片課程，結業後頒發易藍琪能量師認證證書。</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <div>
+            <div style="font-size:11px;color:var(--muted);">課程費用</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold);">$18,000</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:11px;color:var(--muted);">共</div>
+            <div style="font-size:13px;color:var(--white);font-family:'Noto Serif TC',serif;">12堂課</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button onclick="openCourseModal('master-cert')" style="flex:1;padding:10px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:4px;color:#000;font-size:12px;letter-spacing:2px;cursor:pointer;font-family:'Noto Serif TC',serif;font-weight:600;">立即報名</button>
+          <button onclick="openCourseDetail('master-cert')" style="padding:10px 14px;background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--muted);font-size:12px;cursor:pointer;">詳情</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 課程卡片 6 -->
+    <div class="course-card reveal" data-cat="fengshui" style="background:var(--navy2);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all 0.3s;">
+      <div style="position:relative;height:180px;background:linear-gradient(135deg,#0a0d1a,#0d1020);display:flex;align-items:center;justify-content:center;">
+        <div style="font-size:60px;filter:drop-shadow(0 0 20px rgba(56,189,248,0.4));">🌊</div>
+        <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#38bdf8,transparent);"></div>
+      </div>
+      <div style="padding:20px;">
+        <div style="font-size:10px;letter-spacing:3px;color:#38bdf8;font-family:'Cinzel',serif;margin-bottom:8px;">FENG SHUI</div>
+        <div style="font-family:'Noto Serif TC',serif;font-size:16px;margin-bottom:8px;color:var(--white);">居家風水佈局課程</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:14px;">學習居家風水基礎，結合能量礦石佈局，打造旺財、旺運、旺健康的能量空間。</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <div>
+            <div style="font-size:11px;color:var(--muted);">課程費用</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold);">$4,800</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:11px;color:var(--muted);">下期開課</div>
+            <div style="font-size:13px;color:var(--white);font-family:'Noto Serif TC',serif;">2026.05.24</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button onclick="openCourseModal('fengshui-home')" style="flex:1;padding:10px;background:linear-gradient(135deg,#0ea5e9,#38bdf8);border:none;border-radius:4px;color:#fff;font-size:12px;letter-spacing:2px;cursor:pointer;font-family:'Noto Serif TC',serif;font-weight:600;">立即報名</button>
+          <button onclick="openCourseDetail('fengshui-home')" style="padding:10px 14px;background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--muted);font-size:12px;cursor:pointer;">詳情</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 學員見證 -->
+  <div style="max-width:1200px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:32px;">
+      <div style="font-size:10px;letter-spacing:4px;color:var(--gold);font-family:'Cinzel',serif;">TESTIMONIALS</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;margin-top:8px;">學員 <em style="color:var(--gold)">見證</em></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+      <div style="padding:24px;border:1px solid var(--border);background:var(--navy2);border-radius:10px;position:relative;">
+        <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);border-radius:10px 10px 0 0;"></div>
+        <div style="font-size:24px;color:var(--gold);margin-bottom:12px;">"</div>
+        <div style="font-size:13px;color:var(--muted);line-height:2;margin-bottom:16px;">參加水晶能量課程後，開始懂得如何選擇適合自己的礦石，生活品質和心情都提升很多！</div>
+        <div style="font-family:'Noto Serif TC',serif;font-size:13px;color:var(--gold3);">— 小雨 ⭐⭐⭐⭐⭐</div>
+      </div>
+      <div style="padding:24px;border:1px solid var(--border);background:var(--navy2);border-radius:10px;position:relative;">
+        <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--rose),transparent);border-radius:10px 10px 0 0;"></div>
+        <div style="font-size:24px;color:var(--rose);margin-bottom:12px;">"</div>
+        <div style="font-size:13px;color:var(--muted);line-height:2;margin-bottom:16px;">DIY工作坊超棒！親手做的手鍊戴起來特別有感覺，老師解說淺顯易懂，強烈推薦！</div>
+        <div style="font-family:'Noto Serif TC',serif;font-size:13px;color:var(--gold3);">— Lily ⭐⭐⭐⭐⭐</div>
+      </div>
+      <div style="padding:24px;border:1px solid var(--border);background:var(--navy2);border-radius:10px;position:relative;">
+        <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#a78bfa,transparent);border-radius:10px 10px 0 0;"></div>
+        <div style="font-size:24px;color:#a78bfa;margin-bottom:12px;">"</div>
+        <div style="font-size:13px;color:var(--muted);line-height:2;margin-bottom:16px;">紫微斗數課讓我更了解自己的命盤，結合能量飾品調整運勢，今年真的運氣好很多！</div>
+        <div style="font-family:'Noto Serif TC',serif;font-size:13px;color:var(--gold3);">— 晴晴 ⭐⭐⭐⭐⭐</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 課程報名 Modal -->
+<div id="course-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:var(--navy2);border:1px solid var(--border);border-radius:16px;max-width:520px;width:100%;padding:32px;position:relative;max-height:90vh;overflow-y:auto;">
+    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--rose),transparent);border-radius:16px 16px 0 0;"></div>
+    <button onclick="closeCourseModal()" style="position:absolute;top:16px;right:16px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;">×</button>
+    <div id="course-modal-title" style="font-family:'Noto Serif TC',serif;font-size:20px;color:var(--gold);margin-bottom:20px;padding-right:40px;"></div>
+    <form onsubmit="submitCourseForm(event)">
+      <div style="margin-bottom:14px;">
+        <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">YOUR NAME</label>
+        <input required class="form-input" id="course-name" placeholder="姓名" style="width:100%;padding:12px 14px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
+      </div>
+      <div style="margin-bottom:14px;">
+        <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">PHONE / LINE</label>
+        <input required class="form-input" id="course-phone" placeholder="聯絡電話或LINE" style="width:100%;padding:12px 14px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
+      </div>
+      <div style="margin-bottom:14px;">
+        <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">EMAIL</label>
+        <input class="form-input" id="course-email" placeholder="電子信箱" type="email" style="width:100%;padding:12px 14px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
+      </div>
+      <div style="margin-bottom:20px;">
+        <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">MESSAGE</label>
+        <textarea class="form-input" id="course-msg" placeholder="備註或想詢問的問題..." rows="3" style="width:100%;padding:12px 14px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;resize:vertical;"></textarea>
+      </div>
+      <button type="submit" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:4px;color:#000;font-size:12px;letter-spacing:4px;font-family:'Noto Serif TC',serif;cursor:pointer;font-weight:600;">送出報名申請</button>
+    </form>
+  </div>
+</div>
+
+<!-- COURSES -->
+<section id="courses" class="page-section" style="padding:100px 60px;background:var(--navy);">
+  <!-- 頂部標題 -->
+  <div style="text-align:center;margin-bottom:60px;" class="reveal">
+    <div class="section-tag">ONLINE COURSES</div>
+    <h2 class="section-title">易藍琪 <em style="color:var(--gold)">開課平台</em></h2>
+    <div class="section-title-zh">東方能量學習殿堂</div>
+    <p style="font-size:14px;color:var(--muted);max-width:520px;margin:0 auto;line-height:2;font-weight:300;">
+      跟隨易藍琪，深入探索能量療癒、水晶礦石、珠寶工藝與東方命理的奧秘，開啟屬於您的能量覺醒之旅。
+    </p>
+  </div>
+
+  <!-- 課程分類標籤 -->
+  <div style="display:flex;justify-content:center;gap:8px;margin-bottom:48px;flex-wrap:wrap;" class="reveal">
+    <button onclick="filterCourses('all',this)" id="ctab-all"
+      style="padding:6px 20px;border-radius:20px;border:1px solid var(--gold);background:var(--gold);color:#000;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Serif TC',sans-serif;transition:all 0.2s;">全部</button>
+    <button onclick="filterCourses('energy',this)" id="ctab-energy"
+      style="padding:6px 20px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:12px;cursor:pointer;font-family:'Noto Serif TC',sans-serif;transition:all 0.2s;">💎 能量礦石</button>
+    <button onclick="filterCourses('diy',this)" id="ctab-diy"
+      style="padding:6px 20px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:12px;cursor:pointer;font-family:'Noto Serif TC',sans-serif;transition:all 0.2s;">📿 珠寶製作</button>
+    <button onclick="filterCourses('fengshui',this)" id="ctab-fengshui"
+      style="padding:6px 20px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:12px;cursor:pointer;font-family:'Noto Serif TC',sans-serif;transition:all 0.2s;">🌟 風水命理</button>
+  </div>
+
+  <!-- 課程卡片 -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1200px;margin:0 auto 60px;" id="courses-grid">
+
+    <!-- 課程1 -->
+    <div class="course-card reveal" data-cat="energy" style="background:var(--navy2);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:all 0.3s;position:relative;">
+      <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
+      <div style="height:180px;background:linear-gradient(135deg,#0d1628,#1a2d4a);display:flex;align-items:center;justify-content:center;position:relative;">
+        <div style="font-size:60px;filter:drop-shadow(0 0 20px rgba(212,175,55,0.4));">💎</div>
+        <div style="position:absolute;top:12px;right:12px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;font-size:9px;letter-spacing:2px;padding:3px 10px;font-family:'Cinzel',serif;">LIVE</div>
+        <div style="position:absolute;bottom:12px;left:12px;background:rgba(0,0,0,0.5);color:var(--gold);font-size:10px;padding:3px 8px;border-radius:4px;">直播課程</div>
+      </div>
+      <div style="padding:20px;">
+        <div style="font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">ENERGY CRYSTAL</div>
+        <div style="font-family:'Noto Serif TC',serif;font-size:16px;margin-bottom:8px;color:var(--white);">水晶能量療癒入門班</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:14px;">認識12種常用礦石、學習能量淨化儀式、脈輪平衡療癒技巧，開啟能量感知之旅。</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <div>
+            <div style="font-size:10px;color:var(--muted);">📅 每月第一週六</div>
+            <div style="font-size:10px;color:var(--muted);">⏱ 3小時</div>
+          </div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold);font-weight:300;">$2,800</div>
+        </div>
+        <button onclick="openCourseModal('water-crystal')" style="width:100%;padding:10px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;color:#000;font-size:12px;letter-spacing:2px;font-family:'Noto Serif TC',serif;cursor:pointer;font-weight:700;border-radius:4px;transition:all 0.3s;">立即報名</button>
+      </div>
+    </div>
+
+    <!-- 課程2 -->
+    <div class="course-card reveal" data-cat="diy" style="background:var(--navy2);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:all 0.3s;position:relative;">
+      <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--rose),transparent);"></div>
+      <div style="height:180px;background:linear-gradient(135deg,#1a0d10,#2d1418);display:flex;align-items:center;justify-content:center;position:relative;">
+        <div style="font-size:60px;filter:drop-shadow(0 0 20px rgba(183,110,121,0.4));">📿</div>
+        <div style="position:absolute;top:12px;right:12px;background:linear-gradient(135deg,var(--rose),#e08090);color:#fff;font-size:9px;letter-spacing:2px;padding:3px 10px;font-family:'Cinzel',serif;">實體</div>
+        <div style="position:absolute;bottom:12px;left:12px;background:rgba(0,0,0,0.5);color:var(--rose);font-size:10px;padding:3px 8px;border-radius:4px;">親子同樂</div>
+      </div>
+      <div style="padding:20px;">
+        <div style="font-size:10px;letter-spacing:3px;color:var(--rose);font-family:'Cinzel',serif;margin-bottom:6px;">JEWELRY DIY</div>
+        <div style="font-family:'Noto Serif TC',serif;font-size:16px;margin-bottom:8px;color:var(--white);">天然礦石手鍊製作體驗</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:14px;">親手挑選喜愛的礦石，在老師指導下串製專屬能量手鍊，帶走屬於自己的獨特作品。</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <div>
+            <div style="font-size:10px;color:var(--muted);">📅 週末不定期</div>
+            <div style="font-size:10px;color:var(--muted);">⏱ 2小時</div>
+          </div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--rose);font-weight:300;">$1,800</div>
+        </div>
+        <button onclick="openCourseModal('diy-bracelet')" style="width:100%;padding:10px;background:linear-gradient(135deg,var(--rose),#e08090);border:none;color:#fff;font-size:12px;letter-spacing:2px;font-family:'Noto Serif TC',serif;cursor:pointer;font-weight:700;border-radius:4px;transition:all 0.3s;">立即報名</button>
+      </div>
+    </div>
+
+    <!-- 課程3 -->
+    <div class="course-card reveal" data-cat="fengshui" style="background:var(--navy2);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:all 0.3s;position:relative;">
+      <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#a78bfa,transparent);"></div>
+      <div style="height:180px;background:linear-gradient(135deg,#0d0a1a,#1a0d2d);display:flex;align-items:center;justify-content:center;position:relative;">
+        <div style="font-size:60px;filter:drop-shadow(0 0 20px rgba(167,139,250,0.4));">🌟</div>
+        <div style="position:absolute;top:12px;right:12px;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;font-size:9px;letter-spacing:2px;padding:3px 10px;font-family:'Cinzel',serif;">線上</div>
+        <div style="position:absolute;bottom:12px;left:12px;background:rgba(0,0,0,0.5);color:#a78bfa;font-size:10px;padding:3px 8px;border-radius:4px;">個人命盤解析</div>
+      </div>
+      <div style="padding:20px;">
+        <div style="font-size:10px;letter-spacing:3px;color:#a78bfa;font-family:'Cinzel',serif;margin-bottom:6px;">FENG SHUI & ZIWEI</div>
+        <div style="font-family:'Noto Serif TC',serif;font-size:16px;margin-bottom:8px;color:var(--white);">紫微斗數命盤解析課</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:14px;">深入學習紫微斗數基礎架構，解讀命宮、財帛、事業三大宮位，找到人生的能量方向。</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <div>
+            <div style="font-size:10px;color:var(--muted);">📅 線上預約制</div>
+            <div style="font-size:10px;color:var(--muted);">⏱ 4小時/期</div>
+          </div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:#a78bfa;font-weight:300;">$4,500</div>
+        </div>
+        <button onclick="openCourseModal('ziwei')" style="width:100%;padding:10px;background:linear-gradient(135deg,#7c3aed,#a78bfa);border:none;color:#fff;font-size:12px;letter-spacing:2px;font-family:'Noto Serif TC',serif;cursor:pointer;font-weight:700;border-radius:4px;transition:all 0.3s;">立即報名</button>
+      </div>
+    </div>
+
+    <!-- 課程4：直播 -->
+    <div class="course-card reveal" data-cat="energy" style="background:var(--navy2);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:all 0.3s;position:relative;">
+      <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#38bdf8,transparent);"></div>
+      <div style="height:180px;background:linear-gradient(135deg,#0a1520,#0d2035);display:flex;align-items:center;justify-content:center;position:relative;">
+        <div style="font-size:60px;filter:drop-shadow(0 0 20px rgba(56,189,248,0.4));">🔮</div>
+        <div style="position:absolute;top:12px;right:12px;display:flex;align-items:center;gap:4px;background:rgba(239,68,68,0.9);padding:3px 10px;font-size:9px;color:#fff;letter-spacing:1px;">
+          <div style="width:6px;height:6px;border-radius:50%;background:#fff;animation:scroll-pulse 1s infinite;"></div>直播中
+        </div>
+        <div style="position:absolute;bottom:12px;left:12px;background:rgba(0,0,0,0.5);color:#38bdf8;font-size:10px;padding:3px 8px;border-radius:4px;">每週四晚上8點</div>
+      </div>
+      <div style="padding:20px;">
+        <div style="font-size:10px;letter-spacing:3px;color:#38bdf8;font-family:'Cinzel',serif;margin-bottom:6px;">WEEKLY LIVE</div>
+        <div style="font-family:'Noto Serif TC',serif;font-size:16px;margin-bottom:8px;color:var(--white);">能量礦石週播課</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:14px;">每週四晚間免費直播，分享本週能量礦石解析、生活能量應用技巧，歡迎直接提問！</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <div>
+            <div style="font-size:10px;color:var(--muted);">📅 每週四 20:00</div>
+            <div style="font-size:10px;color:var(--muted);">📺 FB/IG直播</div>
+          </div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:#38bdf8;font-weight:300;">免費</div>
+        </div>
+        <button onclick="openLiveStream()" style="width:100%;padding:10px;background:linear-gradient(135deg,#0ea5e9,#38bdf8);border:none;color:#fff;font-size:12px;letter-spacing:2px;font-family:'Noto Serif TC',serif;cursor:pointer;font-weight:700;border-radius:4px;">🔴 加入直播</button>
+      </div>
+    </div>
+
+    <!-- 課程5 -->
+    <div class="course-card reveal" data-cat="fengshui" style="background:var(--navy2);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:all 0.3s;position:relative;">
+      <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
+      <div style="height:180px;background:linear-gradient(135deg,#1a1207,#2d1f0a);display:flex;align-items:center;justify-content:center;">
+        <div style="font-size:60px;filter:drop-shadow(0 0 20px rgba(212,175,55,0.4));">🧭</div>
+      </div>
+      <div style="padding:20px;">
+        <div style="font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">FENG SHUI</div>
+        <div style="font-family:'Noto Serif TC',serif;font-size:16px;margin-bottom:8px;color:var(--white);">居家風水佈局實戰班</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:14px;">學習玄關、客廳、臥室、廚房四大核心區域的風水佈局，結合礦石能量提升居家磁場。</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <div>
+            <div style="font-size:10px;color:var(--muted);">📅 線上視訊</div>
+            <div style="font-size:10px;color:var(--muted);">⏱ 6小時/期</div>
+          </div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold);font-weight:300;">$5,800</div>
+        </div>
+        <button onclick="openCourseModal('fengshui-home')" style="width:100%;padding:10px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;color:#000;font-size:12px;letter-spacing:2px;font-family:'Noto Serif TC',serif;cursor:pointer;font-weight:700;border-radius:4px;">立即報名</button>
+      </div>
+    </div>
+
+    <!-- 課程6 -->
+    <div class="course-card reveal" data-cat="diy" style="background:var(--navy2);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:all 0.3s;position:relative;">
+      <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#10b981,transparent);"></div>
+      <div style="height:180px;background:linear-gradient(135deg,#0a1a0d,#0d2414);display:flex;align-items:center;justify-content:center;">
+        <div style="font-size:60px;filter:drop-shadow(0 0 20px rgba(16,185,129,0.4));">🌿</div>
+      </div>
+      <div style="padding:20px;">
+        <div style="font-size:10px;letter-spacing:3px;color:#10b981;font-family:'Cinzel',serif;margin-bottom:6px;">ENERGY SPRAY DIY</div>
+        <div style="font-family:'Noto Serif TC',serif;font-size:16px;margin-bottom:8px;color:var(--white);">東方艾草能量噴霧調製</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:14px;">學習複方精油調製比例、艾草能量賦予儀式，親手製作專屬空間淨化噴霧帶回家。</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <div>
+            <div style="font-size:10px;color:var(--muted);">📅 不定期開班</div>
+            <div style="font-size:10px;color:var(--muted);">⏱ 2.5小時</div>
+          </div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:#10b981;font-weight:300;">$2,200</div>
+        </div>
+        <button onclick="openCourseModal('spray-diy')" style="width:100%;padding:10px;background:linear-gradient(135deg,#059669,#10b981);border:none;color:#fff;font-size:12px;letter-spacing:2px;font-family:'Noto Serif TC',serif;cursor:pointer;font-weight:700;border-radius:4px;">立即報名</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 直播區塊 -->
+  <div class="reveal" style="max-width:1200px;margin:0 auto 60px;padding:32px;background:linear-gradient(135deg,rgba(239,68,68,0.05),rgba(239,68,68,0.02));border:1px solid rgba(239,68,68,0.2);border-radius:12px;display:flex;align-items:center;gap:32px;flex-wrap:wrap;">
+    <div style="flex:1;min-width:200px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <div style="width:10px;height:10px;border-radius:50%;background:#ef4444;animation:scroll-pulse 1s infinite;"></div>
+        <span style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;color:#ef4444;">LIVE NOW</span>
+      </div>
+      <div style="font-family:'Noto Serif TC',serif;font-size:22px;color:var(--white);margin-bottom:6px;">每週四能量礦石直播課</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.8;">每週四晚上 8:00，跟著易藍琪一起探索礦石能量的奧秘。免費加入，歡迎分享給朋友！</div>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <button onclick="openLiveStream('fb')" style="padding:12px 24px;background:linear-gradient(135deg,#1877f2,#0c5ac4);border:none;color:#fff;font-size:13px;letter-spacing:2px;font-family:'Noto Serif TC',serif;cursor:pointer;border-radius:6px;display:flex;align-items:center;gap:8px;">📘 Facebook 直播</button>
+      <button onclick="openLiveStream('ig')" style="padding:12px 24px;background:linear-gradient(135deg,#e1306c,#833ab4);border:none;color:#fff;font-size:13px;letter-spacing:2px;font-family:'Noto Serif TC',serif;cursor:pointer;border-radius:6px;display:flex;align-items:center;gap:8px;">📸 Instagram 直播</button>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div style="text-align:center;" class="reveal">
+    <p style="font-size:14px;color:var(--muted);margin-bottom:24px;line-height:2;">不確定適合哪個課程？歡迎預約免費諮詢，讓我們為您量身推薦最適合的學習路徑。</p>
+    <a href="#" onclick="showPage('contact');return false;" class="btn-primary">免費課程諮詢</a>
+  </div>
+</section>
+
+<!-- 報名 Modal -->
+<div id="course-modal" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
+  <div style="background:var(--navy2);border:1px solid var(--border);border-radius:16px;padding:40px;max-width:500px;width:90%;position:relative;max-height:90vh;overflow-y:auto;">
+    <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);border-radius:16px 16px 0 0;"></div>
+    <button onclick="closeCourseModal()" style="position:absolute;top:16px;right:16px;background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;">×</button>
+    <div style="font-size:10px;letter-spacing:4px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:8px;">COURSE REGISTRATION</div>
+    <div id="modal-course-title" style="font-family:'Noto Serif TC',serif;font-size:20px;color:var(--white);margin-bottom:4px;"></div>
+    <div id="modal-course-price" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--gold);margin-bottom:24px;"></div>
+    <form onsubmit="submitCourseForm(event)">
+      <div style="margin-bottom:16px;">
+        <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:8px;">YOUR NAME</label>
+        <input class="form-input" id="cr-name" placeholder="您的姓名" required style="width:100%;padding:12px 14px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:6px;outline:none;font-family:'Noto Sans TC',sans-serif;">
+      </div>
+      <div style="margin-bottom:16px;">
+        <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:8px;">PHONE / LINE</label>
+        <input class="form-input" id="cr-phone" placeholder="聯絡電話或LINE ID" style="width:100%;padding:12px 14px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:6px;outline:none;font-family:'Noto Sans TC',sans-serif;">
+      </div>
+      <div style="margin-bottom:16px;">
+        <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:8px;">EMAIL</label>
+        <input class="form-input" id="cr-email" type="email" placeholder="電子信箱" style="width:100%;padding:12px 14px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:6px;outline:none;font-family:'Noto Sans TC',sans-serif;">
+      </div>
+      <div style="margin-bottom:24px;">
+        <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:8px;">MESSAGE</label>
+        <textarea id="cr-msg" placeholder="有任何問題或特殊需求嗎？" style="width:100%;padding:12px 14px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:6px;outline:none;font-family:'Noto Sans TC',sans-serif;resize:vertical;min-height:80px;"></textarea>
+      </div>
+      <button type="submit" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;color:#000;font-size:12px;letter-spacing:4px;font-family:'Noto Serif TC',serif;cursor:pointer;font-weight:700;border-radius:6px;transition:all 0.3s;" id="cr-submit-btn">送出報名申請</button>
+    </form>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer>
   <div class="footer-grid">
@@ -1357,6 +1820,93 @@ const observer = new IntersectionObserver((entries) => {
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
 // ── Product filter ──
+// ── 課程篩選 ──
+let currentCourseId = '';
+
+function filterCourses(cat, btn) {
+  document.querySelectorAll('[id^="ctab-"]').forEach(b => {
+    b.style.background = 'transparent';
+    b.style.color = 'var(--muted)';
+    b.style.borderColor = 'var(--border)';
+  });
+  btn.style.background = 'var(--gold)';
+  btn.style.color = '#000';
+  btn.style.borderColor = 'var(--gold)';
+  document.querySelectorAll('.course-card').forEach(card => {
+    card.style.display = (cat === 'all' || card.dataset.cat === cat) ? 'block' : 'none';
+  });
+}
+
+const courseData = {
+  'water-crystal': { title:'水晶能量療癒入門班', price:'$2,800' },
+  'diy-bracelet':  { title:'天然礦石手鍊製作體驗', price:'$1,800' },
+  'ziwei':         { title:'紫微斗數命盤解析課', price:'$4,500' },
+  'fengshui-home': { title:'居家風水佈局實戰班', price:'$5,800' },
+  'spray-diy':     { title:'東方艾草能量噴霧調製', price:'$2,200' },
+};
+
+function openCourseModal(courseId) {
+  currentCourseId = courseId;
+  const data = courseData[courseId] || {};
+  const modal = document.getElementById('course-modal');
+  const titleEl = document.getElementById('modal-course-title');
+  const priceEl = document.getElementById('modal-course-price');
+  if(titleEl) titleEl.textContent = data.title || '';
+  if(priceEl) priceEl.textContent = data.price || '';
+  if(modal) modal.style.display = 'flex';
+}
+
+function closeCourseModal() {
+  const modal = document.getElementById('course-modal');
+  if(modal) modal.style.display = 'none';
+}
+
+function openLiveStream(platform) {
+  const urls = {
+    fb: 'https://www.facebook.com/iilucky24art',
+    ig: 'https://www.instagram.com/iilucky_art'
+  };
+  window.open(urls[platform] || 'https://www.facebook.com/iilucky24art', '_blank');
+}
+
+async function submitCourseForm(e) {
+  e.preventDefault();
+  const btn = document.getElementById('cr-submit-btn');
+  btn.textContent = '送出中...';
+  btn.disabled = true;
+
+  const data = {
+    name: document.getElementById('cr-name')?.value || '',
+    phone: document.getElementById('cr-phone')?.value || '',
+    email: document.getElementById('cr-email')?.value || '',
+    message: document.getElementById('cr-msg')?.value || '',
+    service_type: '課程報名：' + (courseData[currentCourseId]?.title || currentCourseId),
+    source: 'course_registration',
+    created_at: new Date().toISOString()
+  };
+
+  await submitToSupabase(data);
+
+  btn.textContent = '✓ 報名成功！我們將盡快與您聯繫。';
+  btn.style.background = 'linear-gradient(135deg,#10b981,#059669)';
+  btn.style.color = '#fff';
+
+  setTimeout(() => {
+    closeCourseModal();
+    btn.textContent = '送出報名申請';
+    btn.style.background = '';
+    btn.style.color = '#000';
+    btn.disabled = false;
+    e.target.reset();
+  }, 3000);
+}
+
+// 點擊 modal 外面關閉
+document.getElementById('course-modal')?.addEventListener('click', function(e) {
+  if(e.target === this) closeCourseModal();
+});
+
+// ── 商品篩選 ──
 function filterProducts(cat, btn) {
   document.querySelectorAll('.product-tab').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
@@ -1505,6 +2055,74 @@ async function applyWebThemeFromDB() {
   } catch(e) {
     console.log('使用預設主題');
   }
+}
+
+// ── Courses ──
+function filterCourses(cat, btn) {
+  document.querySelectorAll('.course-tab').forEach(b => {
+    b.style.background = 'transparent';
+    b.style.color = 'var(--muted)';
+  });
+  btn.style.background = 'var(--gold)';
+  btn.style.color = '#000';
+  document.querySelectorAll('.course-card').forEach(card => {
+    card.style.display = (cat==='all' || card.dataset.cat===cat) ? 'block' : 'none';
+  });
+}
+
+let currentCourse = '';
+function openCourseModal(courseId) {
+  currentCourse = courseId;
+  const names = {
+    'water-crystal':'水晶能量入門工作坊 — 報名表',
+    'diy-bracelet':'能量手鍊 DIY 工作坊 — 報名表',
+    'purple-star':'紫微斗數入門班 — 報名表',
+    'master-cert':'能量師進階認證課程 — 報名表',
+    'fengshui-home':'居家風水佈局課程 — 報名表'
+  };
+  const el = document.getElementById('course-modal-title');
+  if(el) el.textContent = names[courseId] || '課程報名';
+  const modal = document.getElementById('course-modal');
+  if(modal) modal.style.display = 'flex';
+}
+
+function closeCourseModal() {
+  const modal = document.getElementById('course-modal');
+  if(modal) modal.style.display = 'none';
+}
+
+function openCourseDetail(courseId) {
+  showPage('contact');
+  setTimeout(()=>{
+    const inp = document.querySelector('#contact textarea');
+    if(inp) inp.value = `我想了解更多關於「${courseId}」課程的資訊`;
+  }, 300);
+}
+
+async function submitCourseForm(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('button[type=submit]');
+  const data = {
+    name: document.getElementById('course-name')?.value || '',
+    phone: document.getElementById('course-phone')?.value || '',
+    email: document.getElementById('course-email')?.value || '',
+    service_type: '課程報名：' + currentCourse,
+    message: document.getElementById('course-msg')?.value || '',
+    source: 'course-registration',
+    created_at: new Date().toISOString()
+  };
+  btn.textContent = '送出中...';
+  btn.disabled = true;
+  await submitToSupabase(data);
+  btn.textContent = '✓ 報名成功！我們將盡快與您確認';
+  btn.style.background = 'linear-gradient(135deg,#10b981,#059669)';
+  setTimeout(() => {
+    closeCourseModal();
+    btn.textContent = '送出報名申請';
+    btn.style.background = '';
+    btn.disabled = false;
+    e.target.reset();
+  }, 3000);
 }
 
 // ── SPA Navigation ──
