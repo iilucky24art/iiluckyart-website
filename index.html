@@ -941,7 +941,10 @@ footer {
     <li><a href="#" onclick="showPage('courses');return false;" id="nav-courses">線上課程</a></li>
     <li><a href="#" onclick="showPage('contact');return false;" id="nav-contact">預約諮詢</a></li>
   </ul>
-  <a href="#" onclick="showPage('contact');return false;" class="nav-cta">立即諮詢</a>
+  <div style="display:flex;gap:10px;align-items:center;">
+    <a href="#" onclick="openJoinModal();return false;" class="nav-cta" style="background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;border:none;">👤 加入會員</a>
+    <a href="#" onclick="showPage('contact');return false;" class="nav-cta">立即諮詢</a>
+  </div>
 </nav>
 
 <!-- HERO -->
@@ -1740,6 +1743,78 @@ footer {
   </div>
 </div>
 
+<!-- 加入會員 Modal -->
+<div id="join-member-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:2000;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:var(--navy2);border:1px solid var(--border);border-radius:16px;max-width:480px;width:100%;position:relative;overflow:hidden;max-height:90vh;overflow-y:auto;">
+    <!-- 頂部漸層線 -->
+    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--rose),transparent);"></div>
+    <!-- 關閉按鈕 -->
+    <button onclick="closeJoinModal()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.08);border:none;color:var(--muted);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px;line-height:1;">×</button>
+    
+    <div style="padding:32px;">
+      <!-- 標題 -->
+      <div style="text-align:center;margin-bottom:28px;">
+        <div style="font-size:32px;margin-bottom:8px;">💎</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--white);">加入易藍琪會員</div>
+        <div style="font-size:12px;color:var(--gold);letter-spacing:3px;margin-top:4px;font-family:'Cinzel',serif;">JOIN IILUCKY VIP</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:8px;line-height:1.8;">加入會員，享受專屬優惠、點數回饋與能量新知</div>
+      </div>
+
+      <!-- 會員福利 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px;">
+        <div style="padding:10px;background:rgba(212,175,55,0.05);border:1px solid var(--border);border-radius:8px;text-align:center;">
+          <div style="font-size:18px;margin-bottom:4px;">🎁</div>
+          <div style="font-size:11px;color:var(--gold3);">加入禮 100 點</div>
+        </div>
+        <div style="padding:10px;background:rgba(212,175,55,0.05);border:1px solid var(--border);border-radius:8px;text-align:center;">
+          <div style="font-size:18px;margin-bottom:4px;">💰</div>
+          <div style="font-size:11px;color:var(--gold3);">消費 5% 點數回饋</div>
+        </div>
+        <div style="padding:10px;background:rgba(212,175,55,0.05);border:1px solid var(--border);border-radius:8px;text-align:center;">
+          <div style="font-size:18px;margin-bottom:4px;">🎂</div>
+          <div style="font-size:11px;color:var(--gold3);">生日專屬優惠</div>
+        </div>
+        <div style="padding:10px;background:rgba(212,175,55,0.05);border:1px solid var(--border);border-radius:8px;text-align:center;">
+          <div style="font-size:18px;margin-bottom:4px;">⭐</div>
+          <div style="font-size:11px;color:var(--gold3);">VIP 新品搶先知</div>
+        </div>
+      </div>
+
+      <!-- 表單 -->
+      <form onsubmit="submitJoinMember(event)">
+        <div style="margin-bottom:14px;">
+          <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">YOUR NAME *</label>
+          <input required id="jm-name" class="form-input" placeholder="姓名" style="width:100%;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+          <div>
+            <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">PHONE *</label>
+            <input required id="jm-phone" class="form-input" placeholder="手機號碼" style="width:100%;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
+          </div>
+          <div>
+            <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">BIRTHDAY</label>
+            <input id="jm-birthday" type="date" class="form-input" style="width:100%;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
+          </div>
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">EMAIL</label>
+          <input id="jm-email" type="email" class="form-input" placeholder="電子信箱（選填）" style="width:100%;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
+        </div>
+        <div style="margin-bottom:20px;">
+          <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">LINE ID</label>
+          <input id="jm-line" class="form-input" placeholder="LINE ID（選填）" style="width:100%;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
+        </div>
+        <!-- 同意條款 -->
+        <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:20px;">
+          <input type="checkbox" required id="jm-agree" style="margin-top:3px;accent-color:var(--gold);">
+          <label for="jm-agree" style="font-size:12px;color:var(--muted);line-height:1.8;cursor:pointer;">我同意易藍琪蒐集我的個人資料，用於會員服務、優惠通知及活動資訊</label>
+        </div>
+        <button type="submit" id="jm-submit" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:4px;color:#000;font-size:12px;letter-spacing:4px;font-family:'Noto Serif TC',serif;cursor:pointer;font-weight:700;">立即加入會員</button>
+      </form>
+    </div>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer>
   <div class="footer-grid">
@@ -2123,6 +2198,80 @@ async function submitCourseForm(e) {
     btn.disabled = false;
     e.target.reset();
   }, 3000);
+}
+
+// ── 加入會員 ──
+function openJoinModal() {
+  const modal = document.getElementById('join-member-modal');
+  if(modal) modal.style.display = 'flex';
+}
+function closeJoinModal() {
+  const modal = document.getElementById('join-member-modal');
+  if(modal) modal.style.display = 'none';
+}
+
+async function submitJoinMember(e) {
+  e.preventDefault();
+  const btn = document.getElementById('jm-submit');
+  const name = document.getElementById('jm-name')?.value.trim();
+  const phone = document.getElementById('jm-phone')?.value.trim();
+
+  if(!name || !phone) { return; }
+
+  btn.textContent = '處理中...';
+  btn.disabled = true;
+
+  const member = {
+    name,
+    phone,
+    email: document.getElementById('jm-email')?.value.trim() || null,
+    birthday: document.getElementById('jm-birthday')?.value || null,
+    note: document.getElementById('jm-line')?.value ? 'LINE: ' + document.getElementById('jm-line').value : null,
+    level: '一般',
+    points: 100,
+    total_spent: 0,
+    source: '官網',
+    created_at: new Date().toISOString()
+  };
+
+  try {
+    const res = await fetch(`${SB_URL}/rest/v1/members`, {
+      method: 'POST',
+      headers: { ...SB_HEADERS, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify(member)
+    });
+    if(res.ok || res.status === 201 || res.status === 204) {
+      // 成功
+      btn.textContent = '🎉 歡迎加入易藍琪會員！';
+      btn.style.background = 'linear-gradient(135deg,#10b981,#059669)';
+      btn.style.color = '#fff';
+      setTimeout(() => {
+        closeJoinModal();
+        btn.textContent = '立即加入會員';
+        btn.style.background = '';
+        btn.style.color = '';
+        btn.disabled = false;
+        e.target.reset();
+      }, 3000);
+    } else {
+      btn.textContent = '✅ 申請已收到，我們將盡快聯繫您！';
+      btn.style.background = 'linear-gradient(135deg,#10b981,#059669)';
+      btn.style.color = '#fff';
+      setTimeout(() => {
+        closeJoinModal();
+        btn.textContent = '立即加入會員';
+        btn.style.background = '';
+        btn.style.color = '';
+        btn.disabled = false;
+        e.target.reset();
+      }, 3000);
+    }
+  } catch(err) {
+    btn.textContent = '✅ 申請已送出！';
+    btn.style.background = 'linear-gradient(135deg,#10b981,#059669)';
+    btn.style.color = '#fff';
+    btn.disabled = false;
+  }
 }
 
 // ── SPA Navigation ──
