@@ -996,7 +996,6 @@ footer {
     <li><a href="#" onclick="showPage('story');return false;" id="nav-story">品牌故事</a></li>
     <li><a href="#" onclick="showPage('products');return false;" id="nav-products">商品系列</a></li>
     <li><a href="#" onclick="showPage('energy');return false;" id="nav-energy">能量飾品</a></li>
-    <li><a href="#" onclick="showPage('news');return false;" id="nav-news">最新消息</a></li>
     <li><a href="#" onclick="showPage('shop');return false;" id="nav-shop">購物時空</a></li>
     <li><a href="#" onclick="showPage('courses');return false;" id="nav-courses">線上課程</a></li>
     <li><a href="#" onclick="showPage('contact');return false;" id="nav-contact">預約諮詢</a></li>
@@ -2448,9 +2447,39 @@ async function initWebsite() {
 
 // 頁面載入後初始化
 window.addEventListener('load', async () => {
+  await applyNavFromDB();
   await applyWebThemeFromDB();
   await initWebsite();
 });
+
+async function applyNavFromDB() {
+  try {
+    const res = await sbFetch('settings', 'key=eq.nav_settings&select=value');
+    if(!res || res.length === 0) return;
+    const navItems = JSON.parse(res[0].value);
+    if(!navItems || navItems.length === 0) return;
+
+    const navList = document.querySelector('.nav-links');
+    if(!navList) return;
+
+    // 頁面 ID → 對應的 showPage 函數
+    const pageMap = {
+      story: "showPage('story')", products: "showPage('products')",
+      energy: "showPage('energy')", shop: "showPage('shop')",
+      courses: "showPage('courses')", contact: "showPage('contact')",
+      news: "showPage('news')",
+    };
+
+    navList.innerHTML = navItems
+      .filter(i => i.visible)
+      .map(i => {
+        const fn = pageMap[i.id] || `showPage('${i.id}')`;
+        return `<li><a href="#" onclick="${fn};return false;" id="nav-${i.id}">${i.label}</a></li>`;
+      }).join('');
+
+    console.log('✅ 導覽列已從後台套用');
+  } catch(e) {}
+}
 
 // 從 Supabase 讀取官網主題並套用
 async function applyWebThemeFromDB() {
