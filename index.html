@@ -2526,8 +2526,10 @@ async function initShop() {
     renderShopCategories();
     renderShopProducts(shopProducts);
   } else {
-    document.getElementById('shop-products-grid').innerHTML =
-      '<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--muted);"><div style="font-size:40px;margin-bottom:16px;">🔮</div><div>商品即將上架，敬請期待</div></div>';
+    // 顯示 demo 商品
+    shopProducts = getDemoProducts();
+    renderShopCategories();
+    renderShopProducts(shopProducts);
   }
 }
 
@@ -2599,8 +2601,9 @@ function renderShopProducts(prods) {
     return;
   }
 
-  const emojis = { '珠寶':'💎','手鍊':'💙','項鍊':'✨','耳環':'🌸','噴霧':'🌿','礦石':'🔮','水晶':'💜','茶':'🍃','藥膳':'🌿','其他':'⭐' };
+  const emojis = { '珠寶':'💎','手鍊':'💙','項鍊':'✨','耳環':'🌸','噴霧':'🌿','礦石':'🔮','水晶':'💜','茶':'🍃','藥膳':'🌿','養生':'🫙','其他':'⭐' };
   const getEmoji = p => {
+    if(p.emoji) return p.emoji;
     const name = (p.name||'') + (p.category||'');
     for(const [k,v] of Object.entries(emojis)) { if(name.includes(k)) return v; }
     return '✨';
@@ -2842,6 +2845,26 @@ async function submitShopOrder(e) {
     btn.textContent = '送出訂單'; btn.disabled = false;
     showShopNotif('❌ 網路錯誤，請重試');
   }
+}
+
+function getDemoProducts() {
+  return [
+    { id:1, name:'藍琪能量手鍊', category:'能量手鍊', price:2400, stock:15, emoji:'💙', description:'天然藍晶石搭配925純銀配件，增強溝通能力與自我表達，帶來平靜與清晰的能量振動。' },
+    { id:2, name:'紫水晶耳環', category:'礦石飾品', price:2100, stock:8, emoji:'💜', description:'天然烏拉圭紫水晶，色澤深邃飽滿，提升靈性感知，促進內心平靜與智慧。' },
+    { id:3, name:'東方艾草能量噴霧', category:'能量噴霧', price:1280, stock:30, emoji:'🌿', description:'精選台灣在地艾草提煉，結合東方能量草本複方配方，有效淨化空間磁場與身心能量場。' },
+    { id:4, name:'琥珀黃金胸針', category:'礦石飾品', price:3200, stock:5, emoji:'✨', description:'天然波羅的海琥珀配18K金飾件，千萬年樹脂結晶的能量精華，招財納福，守護正能量。' },
+    { id:5, name:'白水晶球', category:'水晶礦石', price:3600, stock:10, emoji:'🔮', description:'天然巴西白水晶球，直徑約6cm，淨化空間磁場，增強直覺與心靈感應能力，附精美木座。' },
+    { id:6, name:'粉晶項鍊', category:'能量手鍊', price:2800, stock:12, emoji:'🌸', description:'天然玫瑰石英，吸引愛情與人緣，柔化心靈帶來溫暖療癒能量。925純銀鍊子45cm。' },
+    { id:7, name:'黑曜石手鍊', category:'能量手鍊', price:1800, stock:20, emoji:'⚫', description:'天然墨西哥黑曜石，強力辟邪擋煞，吸附負能量，保護穿戴者免受外界負面能量干擾。' },
+    { id:8, name:'艾草淨化包', category:'能量噴霧', price:680, stock:50, emoji:'🌾', description:'精選有機艾草手工綁製，搭配乾燥薰衣草與鼠尾草，用於空間淨化儀式。約30g/包。' },
+    { id:9, name:'五行能量開光手串', category:'能量手鍊', price:4800, stock:6, emoji:'🎋', description:'結合金木水火土五行礦石，由易藍琪能量師親自開光加持，平衡五行能量，附開光證書。' },
+    { id:10, name:'紅繩招財手鍊', category:'能量手鍊', price:980, stock:25, emoji:'🧧', description:'台灣廟宇祈福紅繩搭配純銀招財貓吊墜，穿戴前經能量注入儀式，招財進寶，吉祥如意。' },
+    { id:11, name:'養生藥膳包', category:'養生系列', price:380, stock:40, emoji:'🫙', description:'精選十二味傳統中草藥，包含黨參、枸杞、紅棗、當歸等，熬湯暖身、調理氣血。' },
+    { id:12, name:'東方花草養生茶包', category:'養生系列', price:480, stock:35, emoji:'🍃', description:'嚴選台灣高山茶葉搭配玫瑰、菊花、薰衣草，無農藥有機栽培，舒緩壓力，促進睡眠。10包/盒。' },
+    { id:13, name:'紫水晶簇原礦', category:'水晶礦石', price:5800, stock:4, emoji:'💎', description:'烏拉圭天然紫水晶簇，重量約500g，淨化房間磁場，提升居家能量品質。每件獨一無二。' },
+    { id:14, name:'黃虎眼石手鍊', category:'能量手鍊', price:2200, stock:18, emoji:'🟡', description:'南非天然虎眼石，增強意志力與自信心，助力事業財運，帶來行動力與勇氣。' },
+    { id:15, name:'月光石戒指', category:'礦石飾品', price:3800, stock:7, emoji:'🌙', description:'斯里蘭卡天然月光石，藍色幻彩流光，與月亮能量共振，增強直覺力，調節情緒平衡。925純銀戒台。' },
+  ];
 }
 
 function showShopNotif(msg) {
