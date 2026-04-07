@@ -913,6 +913,62 @@ footer {
   .news-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
 }
+/* ── 漢堡選單 ── */
+.mobile-menu-btn {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+}
+.mobile-menu-btn span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--gold);
+  transition: all 0.3s;
+}
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(6,12,26,0.98);
+  z-index: 200;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  padding: 40px;
+}
+.mobile-menu a {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 20px;
+  color: var(--gold3);
+  text-decoration: none;
+  letter-spacing: 4px;
+  font-weight: 300;
+}
+.mobile-menu a:hover { color: var(--gold); }
+.mobile-menu-close {
+  position: absolute;
+  top: 24px; right: 24px;
+  background: none; border: none;
+  color: var(--gold3); font-size: 28px;
+  cursor: pointer;
+}
+.mobile-join-btn {
+  padding: 14px 40px;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: #000;
+  border: none;
+  font-family: 'Noto Serif TC', serif;
+  font-size: 14px;
+  letter-spacing: 3px;
+  cursor: pointer;
+  font-weight: 600;
+  border-radius: 4px;
+}
+
 @media (max-width: 640px) {
   nav { padding: 16px 20px; }
   .nav-links, .nav-cta { display: none; }
@@ -929,10 +985,13 @@ footer {
 
 <!-- NAV -->
 <nav id="navbar">
-  <a href="#" class="nav-logo">
+  <a href="#" class="nav-logo" onclick="showPage('home');return false;">
     iiluckyART
     <span>易藍琪生技文創美學</span>
   </a>
+  <button class="mobile-menu-btn" onclick="openMobileMenu()" aria-label="選單">
+    <span></span><span></span><span></span>
+  </button>
   <ul class="nav-links">
     <li><a href="#" onclick="showPage('story');return false;" id="nav-story">品牌故事</a></li>
     <li><a href="#" onclick="showPage('products');return false;" id="nav-products">商品系列</a></li>
@@ -946,6 +1005,18 @@ footer {
     <a href="#" onclick="showPage('contact');return false;" class="nav-cta">立即諮詢</a>
   </div>
 </nav>
+
+<!-- 手機選單 -->
+<div class="mobile-menu" id="mobile-menu">
+  <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+  <a href="#" onclick="closeMobileMenu();showPage('story');">品牌故事</a>
+  <a href="#" onclick="closeMobileMenu();showPage('products');">商品系列</a>
+  <a href="#" onclick="closeMobileMenu();showPage('energy');">能量飾品</a>
+  <a href="#" onclick="closeMobileMenu();showPage('courses');">線上課程</a>
+  <a href="#" onclick="closeMobileMenu();showPage('news');">最新消息</a>
+  <a href="#" onclick="closeMobileMenu();showPage('contact');">預約諮詢</a>
+  <button class="mobile-join-btn" onclick="closeMobileMenu();openJoinModal();">👤 加入會員</button>
+</div>
 
 <!-- HERO -->
 <section id="hero">
@@ -2226,11 +2297,9 @@ async function submitJoinMember(e) {
     phone,
     email: document.getElementById('jm-email')?.value.trim() || null,
     birthday: document.getElementById('jm-birthday')?.value || null,
-    note: document.getElementById('jm-line')?.value ? 'LINE: ' + document.getElementById('jm-line').value : null,
     level: '一般',
     points: 100,
     total_spent: 0,
-    source: '官網',
     created_at: new Date().toISOString()
   };
 
@@ -2272,6 +2341,16 @@ async function submitJoinMember(e) {
     btn.style.color = '#fff';
     btn.disabled = false;
   }
+}
+
+// ── 手機選單 ──
+function openMobileMenu() {
+  const m = document.getElementById('mobile-menu');
+  if(m) m.classList.add('open');
+}
+function closeMobileMenu() {
+  const m = document.getElementById('mobile-menu');
+  if(m) m.classList.remove('open');
 }
 
 // ── SPA Navigation ──
