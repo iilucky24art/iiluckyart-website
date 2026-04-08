@@ -3,9 +3,43 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="易藍琪 ART — 東方能量珠寶美學，精選水晶礦石飾品，傳遞自然能量與東方智慧之美。">
+<!-- SEO Meta（由後台設定自動覆蓋） -->
+<meta name="description" id="meta-description" content="易藍琪 ART — 東方能量珠寶美學，精選水晶礦石飾品，傳遞自然能量與東方智慧之美。台中市大雅區能量飾品品牌。">
+<meta name="keywords" id="meta-keywords" content="能量飾品,水晶礦石,手鍊,艾草噴霧,易藍琪,東方美學,台中飾品">
 <meta name="robots" content="index, follow">
-<title>易藍琪 ART｜東方能量珠寶美學</title>
+<link rel="canonical" id="meta-canonical" href="https://www.iiluckyart.com">
+<!-- Open Graph -->
+<meta property="og:type" id="og-type" content="website">
+<meta property="og:title" id="og-title-tag" content="易藍琪 ART｜東方能量珠寶美學">
+<meta property="og:description" id="og-desc-tag" content="精選天然礦石能量飾品，融合東方智慧，帶來平衡與美麗的生活體驗。">
+<meta property="og:image" id="og-image-tag" content="https://www.iiluckyart.com/og-image.jpg">
+<meta property="og:url" id="og-url-tag" content="https://www.iiluckyart.com">
+<meta property="og:site_name" content="易藍琪 ART">
+<meta property="og:locale" content="zh_TW">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" id="tw-title-tag" content="易藍琪 ART｜東方能量珠寶美學">
+<meta name="twitter:description" id="tw-desc-tag" content="精選天然礦石能量飾品，融合東方智慧，帶來平衡與美麗的生活體驗。">
+<!-- JSON-LD 結構化資料 -->
+<script type="application/ld+json" id="schema-ld-json">
+{
+  "@context": "https://schema.org",
+  "@type": "JewelryStore",
+  "name": "易藍琪生技文創美學",
+  "description": "東方能量珠寶美學，精選水晶礦石飾品",
+  "url": "https://www.iiluckyart.com",
+  "telephone": "+886-930-029-603",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "民族路90號1樓",
+    "addressLocality": "台中市大雅區",
+    "addressCountry": "TW"
+  },
+  "openingHours": "Mo-Sa 10:00-19:00",
+  "priceRange": "$$"
+}
+</script>
+<title id="page-title">易藍琪 ART｜東方能量珠寶美學</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Noto+Serif+TC:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
 <style>
@@ -2447,10 +2481,69 @@ async function initWebsite() {
 
 // 頁面載入後初始化
 window.addEventListener('load', async () => {
+  await applySEOFromDB();
   await applyNavFromDB();
   await applyWebThemeFromDB();
   await initWebsite();
 });
+
+async function applySEOFromDB() {
+  try {
+    const res = await sbFetch('settings', 'key=eq.seo_settings&select=value');
+    if(!res || res.length === 0) return;
+    const s = JSON.parse(res[0].value);
+    const setMeta = (id, attr, val) => {
+      const el = document.getElementById(id);
+      if(el && val) el.setAttribute(attr, val);
+    };
+    const setText = (id, val) => {
+      const el = document.getElementById(id);
+      if(el && val) el.textContent = val;
+    };
+    // 基礎
+    if(s.title) setText('page-title', s.title);
+    setMeta('meta-description', 'content', s.description);
+    setMeta('meta-keywords', 'content', s.keywords);
+    setMeta('meta-canonical', 'href', s.canonical);
+    // OG
+    setMeta('og-type', 'content', s.ogType);
+    setMeta('og-title-tag', 'content', s.ogTitle || s.title);
+    setMeta('og-desc-tag', 'content', s.ogDesc || s.description);
+    setMeta('og-image-tag', 'content', s.ogImage);
+    setMeta('og-url-tag', 'content', s.canonical);
+    setMeta('tw-title-tag', 'content', s.ogTitle || s.title);
+    setMeta('tw-desc-tag', 'content', s.ogDesc || s.description);
+    // JSON-LD
+    const schemaEl = document.getElementById('schema-ld-json');
+    if(schemaEl && s.schemaType) {
+      const schema = {
+        "@context": "https://schema.org",
+        "@type": s.schemaType,
+        "name": "易藍琪生技文創美學",
+        "description": s.description || '',
+        "url": s.canonical || 'https://www.iiluckyart.com',
+        "telephone": s.schemaPhone || '',
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": s.schemaAddress || '',
+          "addressLocality": "台中市",
+          "addressCountry": "TW"
+        },
+        "openingHours": s.schemaHours || '',
+        "priceRange": s.schemaPrice || '$$'
+      };
+      schemaEl.textContent = JSON.stringify(schema, null, 2);
+    }
+    // GA4
+    if(s.gaId && s.gaId.startsWith('G-')) {
+      const gaScript = document.createElement('script');
+      gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + s.gaId;
+      gaScript.async = true;
+      document.head.appendChild(gaScript);
+    }
+    console.log('✅ SEO 設定已從後台套用');
+  } catch(e) {}
+}
 
 async function applyNavFromDB() {
   try {
