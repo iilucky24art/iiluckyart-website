@@ -2332,21 +2332,21 @@ footer {
       <div style="margin-bottom:20px;">
         <label style="display:block;font-size:10px;letter-spacing:2px;color:rgba(212,175,55,0.8);margin-bottom:12px;">選擇方案 *</label>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
-          <label id="plan-basic" onclick="selectPlan('basic')" style="cursor:pointer;padding:12px;border:1px solid var(--gold);border-radius:8px;text-align:center;background:rgba(212,175,55,0.1);">
+          <div id="plan-basic" onclick="selectPlan('basic')" style="cursor:pointer;padding:12px;border:1px solid var(--gold);border-radius:8px;text-align:center;background:rgba(212,175,55,0.1);">
             <div style="font-size:11px;letter-spacing:1px;color:var(--gold);margin-bottom:4px;">基礎版</div>
             <div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold);">NT$880</div>
             <div style="font-size:10px;color:var(--muted);margin-top:2px;">PDF 報告</div>
-          </label>
-          <label id="plan-advanced" onclick="selectPlan('advanced')" style="cursor:pointer;padding:12px;border:1px solid var(--border);border-radius:8px;text-align:center;background:transparent;">
+          </div>
+          <div id="plan-advanced" onclick="selectPlan('advanced')" style="cursor:pointer;padding:12px;border:1px solid var(--border);border-radius:8px;text-align:center;background:transparent;">
             <div style="font-size:11px;letter-spacing:1px;color:var(--muted);margin-bottom:4px;">進階版</div>
             <div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--muted);">NT$1,980</div>
             <div style="font-size:10px;color:var(--muted);margin-top:2px;">報告＋語音</div>
-          </label>
-          <label id="plan-flagship" onclick="selectPlan('flagship')" style="cursor:pointer;padding:12px;border:1px solid var(--border);border-radius:8px;text-align:center;background:transparent;">
+          </div>
+          <div id="plan-flagship" onclick="selectPlan('flagship')" style="cursor:pointer;padding:12px;border:1px solid var(--border);border-radius:8px;text-align:center;background:transparent;">
             <div style="font-size:11px;letter-spacing:1px;color:var(--muted);margin-bottom:4px;">旗艦版</div>
             <div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--muted);">NT$3,800</div>
             <div style="font-size:10px;color:var(--muted);margin-top:2px;">視訊＋選品</div>
-          </label>
+          </div>
         </div>
       </div>
       <input type="hidden" id="bz-plan" value="basic">
