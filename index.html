@@ -939,13 +939,14 @@ footer {
 /* ── RWD ── */
 @media (max-width: 1024px) {
   nav { padding: 16px 32px; }
-  .nav-links { gap: 24px; }
+  .nav-links { gap: 16px; }
   section { padding: 80px 32px; }
   .story-grid, .contact-grid { grid-template-columns: 1fr; gap: 48px; }
   .products-grid { grid-template-columns: repeat(2, 1fr); }
   .energy-grid { grid-template-columns: repeat(2, 1fr); }
   .news-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
+  #courses-grid { grid-template-columns: repeat(2, 1fr); }
 }
 /* ── 漢堡選單 ── */
 .mobile-menu-btn {
@@ -1005,13 +1006,36 @@ footer {
 }
 
 @media (max-width: 640px) {
-  nav { padding: 16px 20px; }
-  .nav-links, .nav-cta { display: none; }
+  nav { padding: 14px 20px; }
+  .nav-links { display: none; }
+  .nav-cta { display: none; }
+  /* 漢堡按鈕在手機版顯示 */
+  .mobile-menu-btn { display: flex !important; }
+  /* 隱藏 nav 右側 CTA 群組 */
+  nav > div:last-child { display: none !important; }
   section { padding: 60px 20px; }
   .hero-btns { flex-direction: column; }
   .products-grid { grid-template-columns: 1fr; }
   .energy-grid { grid-template-columns: 1fr 1fr; }
   .footer-grid { grid-template-columns: 1fr; }
+  .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+  /* shop/courses 多欄 → 單欄 */
+  #shop-products-grid { grid-template-columns: 1fr !important; }
+  #courses-grid { grid-template-columns: 1fr !important; }
+  .story-grid, .contact-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+  .news-grid { grid-template-columns: 1fr !important; }
+  .energy-grid { grid-template-columns: 1fr 1fr !important; }
+  /* hero 文字縮小 */
+  .hero-title { font-size: 48px !important; }
+  .hero-subtitle-zh { font-size: 18px !important; letter-spacing: 4px !important; }
+  .hero-desc { font-size: 13px !important; }
+  /* section padding 縮小 */
+  #shop, #courses, #bazi { padding: 60px 20px !important; }
+  /* 命盤方案三欄 → 單欄 */
+  #baziForm > div[style*="grid-template-columns:repeat(3"] { grid-template-columns: 1fr !important; }
+  /* 課程卡片 */
+  .course-card { margin-bottom: 4px; }
+  /* footer */
   .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
 }
 </style>
