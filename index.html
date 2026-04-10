@@ -1285,30 +1285,26 @@ footer {
     </div>
     <a href="#" style="font-size:12px;color:var(--gold3);text-decoration:none;letter-spacing:2px;font-family:'Noto Serif TC',serif;border-bottom:1px solid rgba(212,175,55,0.3);padding-bottom:2px;">查看全部 →</a>
   </div>
-  <div class="news-grid">
+  <!-- 動態公告（由後台管理） -->
+  <div class="news-grid" id="dynamic-news-grid">
+    <!-- 後台公告動態載入 -->
     <div class="news-card reveal">
-      <div class="news-card-img">
-        <div class="news-card-emoji">🌙</div>
-      </div>
+      <div class="news-card-img"><div class="news-card-emoji">🌙</div></div>
       <div class="news-card-body">
         <div class="news-date">2026.04.06</div>
         <div class="news-title">春分能量淨化特別活動｜新品水晶手鍊系列上市</div>
-        <div class="news-excerpt">春分是能量轉換的最佳時機，易藍琪特別推出限量春分能量手鍊，結合天然礦石與東方能量儀式，為您的春季帶來全新的能量啟動...</div>
+        <div class="news-excerpt">春分是能量轉換的最佳時機，易藍琪特別推出限量春分能量手鍊...</div>
       </div>
     </div>
     <div class="news-card reveal">
-      <div class="news-card-img">
-        <div class="news-card-emoji">✨</div>
-      </div>
+      <div class="news-card-img"><div class="news-card-emoji">✨</div></div>
       <div class="news-card-body">
         <div class="news-date">2026.03.20</div>
         <div class="news-title">能量礦石工作坊｜3月台中場次開放報名</div>
       </div>
     </div>
     <div class="news-card reveal">
-      <div class="news-card-img">
-        <div class="news-card-emoji">🌿</div>
-      </div>
+      <div class="news-card-img"><div class="news-card-emoji">🌿</div></div>
       <div class="news-card-body">
         <div class="news-date">2026.03.01</div>
         <div class="news-title">東方艾草複方噴霧｜新配方正式上市</div>
@@ -2645,6 +2641,7 @@ window.addEventListener('load', async () => {
   await initWebsite();
   showMobileMenuBtn();
   buildMobileNavLinks();
+  loadDynamicNews();
 });
 
 window.addEventListener('resize', () => {
@@ -2737,6 +2734,27 @@ function buildMobileNavLinks() {
 function showMobileMenuBtn() {
   const btn = document.getElementById('mobile-menu-btn');
   if(btn && window.innerWidth <= 768) btn.style.display = 'block';
+}
+
+async function loadDynamicNews() {
+  try {
+    const data = await sbFetch('news_posts', 'status=eq.published&order=pinned.desc,created_at.desc&limit=6');
+    if(!data || data.length === 0) return;
+    const grid = document.getElementById('dynamic-news-grid');
+    if(!grid) return;
+    grid.innerHTML = data.map(n => `
+      <div class="news-card reveal">
+        <div class="news-card-img">
+          <div class="news-card-emoji">${n.emoji || '✨'}</div>
+        </div>
+        <div class="news-card-body">
+          <div class="news-date">${(n.date||n.created_at||'').slice(0,10).replace(/-/g,'.')}</div>
+          ${n.pinned ? '<span style="font-size:10px;color:var(--gold);letter-spacing:2px;">📌 置頂</span>' : ''}
+          <div class="news-title">${n.title}</div>
+          ${n.excerpt ? `<div class="news-excerpt">${n.excerpt}</div>` : ''}
+        </div>
+      </div>`).join('');
+  } catch(e) {}
 }
 
 async function applyNavFromDB() {
