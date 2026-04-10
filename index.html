@@ -952,58 +952,169 @@ footer {
 .mobile-menu-btn {
   display: none;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 5px;
   cursor: pointer;
-  padding: 4px;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(212,175,55,0.45);
+  background: rgba(212,175,55,0.06);
+  transition: all 0.3s;
+  flex-shrink: 0;
+  position: relative;
 }
+.mobile-menu-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(212,175,55,0.08), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.mobile-menu-btn:hover { border-color: var(--gold); background: rgba(212,175,55,0.12); }
+.mobile-menu-btn:hover::before { opacity: 1; }
 .mobile-menu-btn span {
   display: block;
-  width: 22px;
-  height: 2px;
+  width: 18px;
+  height: 1.5px;
   background: var(--gold);
-  transition: all 0.3s;
+  transition: all 0.35s cubic-bezier(.4,0,.2,1);
+  transform-origin: center;
 }
+.mobile-menu-btn span:nth-child(1) { width: 18px; }
+.mobile-menu-btn span:nth-child(2) { width: 12px; }
+.mobile-menu-btn span:nth-child(3) { width: 18px; }
+.mobile-menu-btn:hover span:nth-child(2) { width: 18px; }
+/* 開啟狀態：三條線變成 × */
+.mobile-menu-btn.is-open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); width: 18px; }
+.mobile-menu-btn.is-open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.mobile-menu-btn.is-open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); width: 18px; }
 .mobile-menu {
   display: none;
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(6,12,26,0.98);
+  background: #060c1a;
   z-index: 200;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 32px;
-  padding: 40px;
+  gap: 0;
+  padding: 40px 32px;
+  overflow: hidden;
+}
+.mobile-menu::before {
+  content: '易';
+  position: absolute;
+  font-family: 'Noto Serif TC', serif;
+  font-size: 320px;
+  color: rgba(212,175,55,0.025);
+  right: -40px;
+  bottom: -40px;
+  line-height: 1;
+  pointer-events: none;
+}
+.mobile-menu::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), rgba(183,110,121,0.6), transparent);
+}
+/* 品牌標誌 */
+.mobile-menu-brand {
+  font-family: 'Cinzel', serif;
+  font-size: 15px;
+  letter-spacing: 5px;
+  color: var(--gold);
+  margin-bottom: 8px;
+  opacity: 0.9;
+}
+.mobile-menu-brand-sub {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: rgba(212,175,55,0.45);
+  margin-bottom: 40px;
+  font-weight: 300;
+}
+/* 分隔線 */
+.mobile-menu-divider {
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 28px 0;
+  opacity: 0.5;
 }
 .mobile-menu a {
   font-family: 'Noto Serif TC', serif;
-  font-size: 20px;
-  color: var(--gold3);
+  font-size: 18px;
+  color: rgba(248,244,238,0.65);
   text-decoration: none;
-  letter-spacing: 4px;
+  letter-spacing: 5px;
   font-weight: 300;
+  padding: 12px 0;
+  width: 100%;
+  text-align: center;
+  transition: all 0.25s;
+  position: relative;
 }
-.mobile-menu a:hover { color: var(--gold); }
+.mobile-menu a::after {
+  content: '';
+  position: absolute;
+  bottom: 8px; left: 50%;
+  width: 0; height: 1px;
+  background: var(--gold);
+  transform: translateX(-50%);
+  transition: width 0.3s;
+}
+.mobile-menu a:hover { color: var(--gold3); }
+.mobile-menu a:hover::after { width: 24px; }
 .mobile-menu.open { display: flex; }
 .mobile-menu-close {
   position: absolute;
-  top: 24px; right: 24px;
-  background: none; border: none;
-  color: var(--gold3); font-size: 28px;
+  top: 20px; right: 20px;
+  width: 36px; height: 36px;
+  border: 1px solid rgba(212,175,55,0.3);
+  background: rgba(212,175,55,0.06);
+  color: var(--gold3);
+  font-size: 16px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.mobile-menu-close:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(212,175,55,0.12);
 }
 .mobile-join-btn {
-  padding: 14px 40px;
+  padding: 12px 36px;
   background: linear-gradient(135deg, var(--gold), var(--gold2));
   color: #000;
   border: none;
   font-family: 'Noto Serif TC', serif;
-  font-size: 14px;
-  letter-spacing: 3px;
+  font-size: 12px;
+  letter-spacing: 4px;
   cursor: pointer;
-  font-weight: 600;
-  border-radius: 4px;
+  font-weight: 700;
+  margin-top: 8px;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
 }
+.mobile-join-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.mobile-join-btn:hover::before { opacity: 1; }
+.mobile-join-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(212,175,55,0.35); }
 
 @media (max-width: 640px) {
   nav { padding: 14px 20px; }
@@ -1068,15 +1179,19 @@ footer {
 
 <!-- 手機選單 -->
 <div class="mobile-menu" id="mobile-menu">
-  <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+  <button class="mobile-menu-close" onclick="closeMobileMenu()">✕</button>
+  <div class="mobile-menu-brand">iiluckyART</div>
+  <div class="mobile-menu-brand-sub">易藍琪生技文創美學</div>
   <a href="#" onclick="closeMobileMenu();showPage('story');">品牌故事</a>
   <a href="#" onclick="closeMobileMenu();showPage('products');">商品系列</a>
   <a href="#" onclick="closeMobileMenu();showPage('energy');">能量飾品</a>
+  <a href="#" onclick="closeMobileMenu();showPage('shop');">購物時空</a>
   <a href="#" onclick="closeMobileMenu();showPage('courses');">線上課程</a>
-  <a href="#" onclick="closeMobileMenu();showPage('bazi');">🔮 命盤諮詢</a>
+  <a href="#" onclick="closeMobileMenu();showPage('bazi');">命盤諮詢</a>
   <a href="#" onclick="closeMobileMenu();showPage('news');">最新消息</a>
   <a href="#" onclick="closeMobileMenu();showPage('contact');">預約諮詢</a>
-  <button class="mobile-join-btn" onclick="closeMobileMenu();openJoinModal();">👤 加入會員</button>
+  <div class="mobile-menu-divider"></div>
+  <button class="mobile-join-btn" onclick="closeMobileMenu();openJoinModal();">加入會員</button>
 </div>
 
 <!-- HERO -->
@@ -3103,11 +3218,17 @@ async function submitJoinMember(e) {
 // ── 手機選單 ──
 function openMobileMenu() {
   const m = document.getElementById('mobile-menu');
+  const btn = document.querySelector('.mobile-menu-btn');
   if(m) m.classList.add('open');
+  if(btn) btn.classList.add('is-open');
+  document.body.style.overflow = 'hidden';
 }
 function closeMobileMenu() {
   const m = document.getElementById('mobile-menu');
+  const btn = document.querySelector('.mobile-menu-btn');
   if(m) m.classList.remove('open');
+  if(btn) btn.classList.remove('is-open');
+  document.body.style.overflow = '';
 }
 
 // ── SPA Navigation ──
