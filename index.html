@@ -1172,7 +1172,7 @@ footer {
     <li><a href="#" onclick="showPage('contact');return false;" id="nav-contact">預約諮詢</a></li>
   </ul>
   <div style="display:flex;gap:10px;align-items:center;">
-    <a href="#" onclick="handleMemberBtnClick();return false;" id="nav-member-btn" class="nav-cta" style="background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;border:none;">👤 加入會員</a>
+    <a href="#" onclick="openJoinModal();return false;" class="nav-cta" style="background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;border:none;">👤 加入會員</a>
     <a href="#" onclick="showPage('contact');return false;" class="nav-cta">立即諮詢</a>
   </div>
 </nav>
@@ -1908,25 +1908,10 @@ footer {
         <div style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--white);">加入易藍琪會員</div>
         <div style="font-size:12px;color:var(--gold);letter-spacing:3px;margin-top:4px;font-family:'Cinzel',serif;">JOIN IILUCKY VIP</div>
         <div style="font-size:12px;color:var(--muted);margin-top:8px;line-height:1.8;">加入會員，享受專屬優惠、點數回饋與能量新知</div>
-        <!-- 登入/加入 切換 -->
-        <div style="display:flex;gap:6px;margin-top:16px;background:rgba(255,255,255,0.05);border-radius:8px;padding:4px;">
-          <button id="tab-join" onclick="switchMemberTab('join')" style="flex:1;padding:8px;border:none;border-radius:6px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;font-size:12px;font-family:'Noto Sans TC',sans-serif;cursor:pointer;font-weight:600;">✨ 新會員加入</button>
-          <button id="tab-login" onclick="switchMemberTab('login')" style="flex:1;padding:8px;border:none;border-radius:6px;background:transparent;color:var(--muted);font-size:12px;font-family:'Noto Sans TC',sans-serif;cursor:pointer;">🔑 已是會員登入</button>
-        </div>
-      </div>
-
-      <!-- 會員登入區塊 -->
-      <div id="member-login-section" style="display:none;padding:0 0 20px;">
-        <div style="margin-bottom:14px;">
-          <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;">手機號碼</label>
-          <input id="ml-phone" type="tel" placeholder="0912-345-678" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--white);border-radius:6px;font-size:14px;outline:none;box-sizing:border-box;">
-        </div>
-        <button onclick="memberLoginByPhone()" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:6px;color:#000;font-size:12px;letter-spacing:3px;font-family:'Noto Sans TC',sans-serif;cursor:pointer;font-weight:700;">登入</button>
-        <div id="ml-msg" style="text-align:center;font-size:12px;color:var(--muted);margin-top:10px;"></div>
       </div>
 
       <!-- 會員福利 -->
-      <div id="jm-benefits" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px;">
         <div style="padding:10px;background:rgba(212,175,55,0.05);border:1px solid var(--border);border-radius:8px;text-align:center;">
           <div style="font-size:18px;margin-bottom:4px;">🎁</div>
           <div style="font-size:11px;color:var(--gold3);">加入禮 100 點</div>
@@ -1957,8 +1942,8 @@ footer {
             <input required id="jm-phone" class="form-input" placeholder="手機號碼" style="width:100%;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
           </div>
           <div>
-            <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">BIRTHDAY</label>
-            <input id="jm-birthday" type="date" class="form-input" style="width:100%;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
+            <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">BIRTHDAY <span style="color:#B76E79;">*</span></label>
+            <input id="jm-birthday" type="date" class="form-input" required style="width:100%;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
           </div>
         </div>
         <div style="margin-bottom:14px;">
@@ -3215,7 +3200,12 @@ async function submitJoinMember(e) {
   const name = document.getElementById('jm-name')?.value.trim();
   const phone = document.getElementById('jm-phone')?.value.trim();
 
-  if(!name || !phone) { return; }
+  const birthday = document.getElementById('jm-birthday')?.value;
+  if(!name || !phone || !birthday) {
+    if(!birthday) document.getElementById('jm-birthday').style.borderColor = '#B76E79';
+    return;
+  }
+  document.getElementById('jm-birthday').style.borderColor = '';
 
   btn.textContent = '處理中...';
   btn.disabled = true;
@@ -3239,11 +3229,9 @@ async function submitJoinMember(e) {
     });
     if(res.ok || res.status === 201 || res.status === 204) {
       // 成功
-      localStorage.setItem('ila_member', JSON.stringify(member));
-      btn.textContent = '🎉 歡迎加入易藍琪！';
+      btn.textContent = '🎉 歡迎加入易藍琪會員！';
       btn.style.background = 'linear-gradient(135deg,#10b981,#059669)';
       btn.style.color = '#fff';
-      updateNavMemberState();
       setTimeout(() => {
         closeJoinModal();
         btn.textContent = '立即加入會員';
@@ -3251,9 +3239,9 @@ async function submitJoinMember(e) {
         btn.style.color = '';
         btn.disabled = false;
         e.target.reset();
-      }, 2000);
+      }, 3000);
     } else {
-      btn.textContent = '✅ 申請已收到！';
+      btn.textContent = '✅ 申請已收到，我們將盡快聯繫您！';
       btn.style.background = 'linear-gradient(135deg,#10b981,#059669)';
       btn.style.color = '#fff';
       setTimeout(() => {
@@ -3263,7 +3251,7 @@ async function submitJoinMember(e) {
         btn.style.color = '';
         btn.disabled = false;
         e.target.reset();
-      }, 2000);
+      }, 3000);
     }
   } catch(err) {
     btn.textContent = '✅ 申請已送出！';
@@ -3307,14 +3295,6 @@ function showPage(pageId) {
   } else {
     // Hide hero
     if(hero) { hero.style.display = 'none'; }
-
-    // ── 需要登入才能查看的頁面 ──
-    const memberOnlyPages = ['shop', 'courses'];
-    if(memberOnlyPages.includes(pageId) && !getMember()) {
-      openJoinModal();
-      return;
-    }
-
     // Show target section
     const target = document.getElementById(pageId);
     if(target) {
@@ -3402,140 +3382,6 @@ async function submitToSupabase(data) {
 function openLiveStream() {
   window.open('https://www.facebook.com/109441260851908', '_blank');
 }
-
-// ════════════════════════════════════
-// 會員系統
-// ════════════════════════════════════
-function getMember() {
-  try { return JSON.parse(localStorage.getItem('ila_member')); } catch(e) { return null; }
-}
-
-function updateNavMemberState() {
-  const member = getMember();
-  const btn = document.getElementById('nav-member-btn');
-  if (!btn) return;
-  if (member) {
-    btn.innerHTML = '👤 ' + (member.name || '會員');
-    btn.style.background = 'linear-gradient(135deg,#10b981,#059669)';
-    btn.style.color = '#fff';
-  } else {
-    btn.innerHTML = '👤 加入會員';
-    btn.style.background = 'linear-gradient(135deg,var(--gold),var(--gold2))';
-    btn.style.color = '#000';
-  }
-}
-
-function handleMemberBtnClick() {
-  if (getMember()) {
-    openMemberInfoModal();
-  } else {
-    openJoinModal();
-  }
-}
-
-function openMemberInfoModal() {
-  const member = getMember();
-  if (!member) return;
-  let modal = document.getElementById('member-info-modal');
-  if (!modal) {
-    modal = document.createElement('div');
-    modal.id = 'member-info-modal';
-    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px;';
-    modal.innerHTML = `
-      <div style="background:#111827;border:1px solid rgba(212,175,55,0.3);border-radius:16px;max-width:360px;width:100%;padding:32px;position:relative;">
-        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#D4AF37,#B76E79,transparent);border-radius:16px 16px 0 0;"></div>
-        <button onclick="document.getElementById('member-info-modal').remove()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.08);border:none;color:#aaa;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:18px;line-height:1;">×</button>
-        <div style="text-align:center;margin-bottom:24px;">
-          <div style="font-size:40px;margin-bottom:8px;">💎</div>
-          <div style="font-size:20px;font-weight:600;color:#fff;">${member.name || '會員'}</div>
-          <div style="font-size:12px;color:#D4AF37;letter-spacing:2px;margin-top:4px;">${(member.level||'一般')} 會員</div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
-          <div style="padding:14px;background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);border-radius:10px;text-align:center;">
-            <div style="font-size:11px;color:#7a8aab;margin-bottom:4px;">點數</div>
-            <div style="font-size:24px;font-weight:700;color:#D4AF37;">${member.points||0}</div>
-          </div>
-          <div style="padding:14px;background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);border-radius:10px;text-align:center;">
-            <div style="font-size:11px;color:#7a8aab;margin-bottom:4px;">電話</div>
-            <div style="font-size:13px;color:#e8e8f0;">${member.phone||'—'}</div>
-          </div>
-        </div>
-        <button onclick="memberLogout()" style="width:100%;padding:12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;color:#ff6b6b;cursor:pointer;font-size:13px;font-family:'Noto Sans TC',sans-serif;">登出</button>
-      </div>`;
-    document.body.appendChild(modal);
-  }
-  modal.style.display = 'flex';
-}
-
-function memberLogout() {
-  localStorage.removeItem('ila_member');
-  updateNavMemberState();
-  const modal = document.getElementById('member-info-modal');
-  if (modal) modal.remove();
-  showMemberToast('已登出，下次再見 👋');
-}
-
-function switchMemberTab(tab) {
-  const form = document.querySelector('#join-member-modal form');
-  const loginSec = document.getElementById('member-login-section');
-  const benefits = document.getElementById('jm-benefits');
-  const tabJoin = document.getElementById('tab-join');
-  const tabLogin = document.getElementById('tab-login');
-  const gold = 'linear-gradient(135deg,var(--gold),var(--gold2))';
-  if (tab === 'login') {
-    if (form) form.style.display = 'none';
-    if (benefits) benefits.style.display = 'none';
-    if (loginSec) loginSec.style.display = 'block';
-    if (tabJoin) { tabJoin.style.background = 'transparent'; tabJoin.style.color = 'var(--muted)'; tabJoin.style.fontWeight = '400'; }
-    if (tabLogin) { tabLogin.style.background = gold; tabLogin.style.color = '#000'; tabLogin.style.fontWeight = '600'; }
-  } else {
-    if (form) form.style.display = 'block';
-    if (benefits) benefits.style.display = 'grid';
-    if (loginSec) loginSec.style.display = 'none';
-    if (tabJoin) { tabJoin.style.background = gold; tabJoin.style.color = '#000'; tabJoin.style.fontWeight = '600'; }
-    if (tabLogin) { tabLogin.style.background = 'transparent'; tabLogin.style.color = 'var(--muted)'; tabLogin.style.fontWeight = '400'; }
-  }
-}
-
-async function memberLoginByPhone() {
-  const phone = (document.getElementById('ml-phone')?.value || '').trim();
-  const msg = document.getElementById('ml-msg');
-  if (!phone) { if(msg) msg.textContent = '請輸入手機號碼'; return; }
-  if (msg) msg.textContent = '查詢中...';
-  try {
-    const res = await fetch(`${SB_URL}/rest/v1/members?phone=eq.${encodeURIComponent(phone)}&select=*`, { headers: SB_HEADERS });
-    const data = await res.json();
-    if (data && data.length > 0) {
-      localStorage.setItem('ila_member', JSON.stringify(data[0]));
-      updateNavMemberState();
-      if (msg) msg.textContent = '';
-      closeJoinModal();
-      showMemberToast('歡迎回來，' + (data[0].name || '會員') + '！ 💎');
-    } else {
-      if (msg) msg.textContent = '查無此號碼，請先加入會員';
-    }
-  } catch(e) {
-    if (msg) msg.textContent = '連線失敗，請稍後再試';
-  }
-}
-
-function showMemberToast(msg) {
-  let t = document.getElementById('member-toast');
-  if (!t) {
-    t = document.createElement('div');
-    t.id = 'member-toast';
-    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a2235;border:1px solid rgba(200,168,75,0.4);color:#e8e8f0;padding:12px 28px;border-radius:50px;font-size:13px;z-index:9999;pointer-events:none;font-family:"Noto Sans TC",sans-serif;white-space:nowrap;';
-    document.body.appendChild(t);
-  }
-  t.textContent = msg;
-  t.style.opacity = '1';
-  clearTimeout(t._timer);
-  t._timer = setTimeout(() => { t.style.opacity = '0'; }, 2800);
-}
-
-// 頁面載入時初始化會員狀態
-document.addEventListener('DOMContentLoaded', updateNavMemberState);
-
 </script>
 </body>
 </html>
