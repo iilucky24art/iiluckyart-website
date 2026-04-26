@@ -1943,8 +1943,8 @@ footer {
             <input required id="jm-phone" class="form-input" placeholder="手機號碼" style="width:100%;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
           </div>
           <div>
-            <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">BIRTHDAY</label>
-            <input id="jm-birthday" type="date" class="form-input" style="width:100%;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
+            <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">BIRTHDAY <span style="color:#B76E79;">*</span></label>
+            <input id="jm-birthday" type="date" class="form-input" required style="width:100%;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
           </div>
         </div>
         <div style="margin-bottom:14px;">
@@ -3201,7 +3201,13 @@ async function submitJoinMember(e) {
   const name = document.getElementById('jm-name')?.value.trim();
   const phone = document.getElementById('jm-phone')?.value.trim();
 
-  if(!name || !phone) { return; }
+  const birthday = document.getElementById('jm-birthday')?.value;
+  if(!name || !phone || !birthday) {
+    const bd = document.getElementById('jm-birthday');
+    if(bd && !birthday) { bd.style.borderColor='#B76E79'; bd.focus(); }
+    return;
+  }
+  document.getElementById('jm-birthday').style.borderColor = '';
 
   btn.textContent = '處理中...';
   btn.disabled = true;
