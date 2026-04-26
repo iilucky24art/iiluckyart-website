@@ -1944,7 +1944,18 @@ footer {
           </div>
           <div>
             <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">BIRTHDAY <span style="color:#B76E79;">*</span></label>
-            <input id="jm-birthday" type="date" class="form-input" required style="width:100%;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
+            <div style="display:grid;grid-template-columns:2fr 1.5fr 1.5fr;gap:8px;">
+              <select id="jm-bday-year" style="padding:10px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;appearance:auto;">
+                <option value="">年</option>
+              </select>
+              <select id="jm-bday-month" style="padding:10px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;appearance:auto;">
+                <option value="">月</option>
+              </select>
+              <select id="jm-bday-day" style="padding:10px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;appearance:auto;">
+                <option value="">日</option>
+              </select>
+            </div>
+            <input type="hidden" id="jm-birthday">
           </div>
         </div>
         <div style="margin-bottom:14px;">
@@ -3203,11 +3214,12 @@ async function submitJoinMember(e) {
 
   const birthday = document.getElementById('jm-birthday')?.value;
   if(!name || !phone || !birthday) {
-    const bd = document.getElementById('jm-birthday');
-    if(bd && !birthday) { bd.style.borderColor='#B76E79'; bd.focus(); }
+    const yr = document.getElementById('jm-bday-year');
+    const mo = document.getElementById('jm-bday-month');
+    const dy = document.getElementById('jm-bday-day');
+    [yr,mo,dy].forEach(el => { if(el && !el.value) el.style.borderColor='#B76E79'; });
     return;
   }
-  document.getElementById('jm-birthday').style.borderColor = '';
 
   btn.textContent = '處理中...';
   btn.disabled = true;
@@ -3541,6 +3553,48 @@ document.addEventListener('DOMContentLoaded', function() {
   const lm = document.getElementById('login-modal');
   if(lm) lm.addEventListener('click', function(e){ if(e.target===lm) closeLoginModal(); });
 });
+
+// ── 生日下拉選單初始化 ──
+function initBirthdaySelects() {
+  const yearSel = document.getElementById('jm-bday-year');
+  const monthSel = document.getElementById('jm-bday-month');
+  const daySel = document.getElementById('jm-bday-day');
+  if (!yearSel || yearSel.options.length > 1) return;
+
+  // 年份：今年往前 80 年
+  const thisYear = new Date().getFullYear();
+  for (let y = thisYear; y >= thisYear - 80; y--) {
+    yearSel.innerHTML += `<option value="${y}">${y} 年</option>`;
+  }
+  // 月份
+  for (let m = 1; m <= 12; m++) {
+    monthSel.innerHTML += `<option value="${String(m).padStart(2,'0')}">${m} 月</option>`;
+  }
+  // 日
+  for (let d = 1; d <= 31; d++) {
+    daySel.innerHTML += `<option value="${String(d).padStart(2,'0')}">${d} 日</option>`;
+  }
+
+  function syncHidden() {
+    const y = yearSel.value, m = monthSel.value, d = daySel.value;
+    const hidden = document.getElementById('jm-birthday');
+    if (hidden) hidden.value = (y && m && d) ? `${y}-${m}-${d}` : '';
+    // Reset border
+    [yearSel, monthSel, daySel].forEach(el => el.style.borderColor = '');
+  }
+  yearSel.addEventListener('change', syncHidden);
+  monthSel.addEventListener('change', syncHidden);
+  daySel.addEventListener('change', syncHidden);
+}
+
+// 開啟加入 Modal 時初始化
+const _origOpenJoin = window.openJoinModal;
+window.openJoinModal = function() {
+  if (_origOpenJoin) _origOpenJoin();
+  setTimeout(initBirthdaySelects, 100);
+};
+document.addEventListener('DOMContentLoaded', initBirthdaySelects);
+
 </script>
 
 </body>
