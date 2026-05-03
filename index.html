@@ -3207,6 +3207,7 @@ function closeJoinModal() {
 async function submitJoinMember(e) {
   e.preventDefault();
   const btn = document.getElementById('jm-submit');
+  const form = e.target;
   const name = document.getElementById('jm-name')?.value.trim();
   const phone = document.getElementById('jm-phone')?.value.trim();
 
@@ -3233,6 +3234,21 @@ async function submitJoinMember(e) {
     created_at: new Date().toISOString()
   };
 
+  // 統一的「成功完成 → 自動關閉 modal」流程
+  function finishAndClose(message, delay) {
+    btn.textContent = message;
+    btn.style.background = 'linear-gradient(135deg,#10b981,#059669)';
+    btn.style.color = '#fff';
+    setTimeout(() => {
+      try { closeJoinModal(); } catch(_) {}
+      btn.textContent = '立即加入會員';
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.disabled = false;
+      try { form && form.reset(); } catch(_) {}
+    }, delay);
+  }
+
   try {
     const res = await fetch(`${SB_URL}/rest/v1/members`, {
       method: 'POST',
@@ -3240,38 +3256,17 @@ async function submitJoinMember(e) {
       body: JSON.stringify(member)
     });
     if(res.ok || res.status === 201 || res.status === 204) {
-      // 成功
+      // 成功寫入 Supabase
       localStorage.setItem('ila_member', JSON.stringify(member));
       if(typeof updateNavMemberState === 'function') updateNavMemberState();
-      btn.textContent = '🎉 歡迎加入易藍琪！';
-      btn.style.background = 'linear-gradient(135deg,#10b981,#059669)';
-      btn.style.color = '#fff';
-      setTimeout(() => {
-        closeJoinModal();
-        btn.textContent = '立即加入會員';
-        btn.style.background = '';
-        btn.style.color = '';
-        btn.disabled = false;
-        e.target.reset();
-      }, 2000);
+      finishAndClose('🎉 歡迎加入易藍琪！', 1800);
     } else {
-      btn.textContent = '✅ 申請已收到，我們將盡快聯繫您！';
-      btn.style.background = 'linear-gradient(135deg,#10b981,#059669)';
-      btn.style.color = '#fff';
-      setTimeout(() => {
-        closeJoinModal();
-        btn.textContent = '立即加入會員';
-        btn.style.background = '';
-        btn.style.color = '';
-        btn.disabled = false;
-        e.target.reset();
-      }, 3000);
+      // API 回傳錯誤狀態，但仍視為「申請已收到」
+      finishAndClose('✅ 申請已收到，我們將盡快聯繫您！', 1800);
     }
   } catch(err) {
-    btn.textContent = '✅ 申請已送出！';
-    btn.style.background = 'linear-gradient(135deg,#10b981,#059669)';
-    btn.style.color = '#fff';
-    btn.disabled = false;
+    // 網路錯誤也要自動關閉（這就是原本的 bug：沒有 setTimeout 關 modal）
+    finishAndClose('✅ 申請已送出！', 1800);
   }
 }
 
