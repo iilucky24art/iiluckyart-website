@@ -3196,11 +3196,12 @@ async function submitCourseForm(e) {
 
 // ── 加入會員 ──
 function openJoinModal() {
-  const modal = document.getElementById('join-member-modal');
+  var modal = document.getElementById('join-member-modal');
   if(modal) modal.style.display = 'flex';
+  setTimeout(initBirthdaySelects, 100);
 }
 function closeJoinModal() {
-  const modal = document.getElementById('join-member-modal');
+  var modal = document.getElementById('join-member-modal');
   if(modal) modal.style.display = 'none';
 }
 
@@ -3656,13 +3657,11 @@ function showMemberToast(msg) {
   t._t = setTimeout(() => { t.style.opacity = '0'; }, 2800);
 }
 
-// 加入會員成功後儲存 localStorage
-const _origSubmit = window.submitJoinMember;
-// Patch submitJoinMember to save member and update nav
+// 加入會員成功後儲存 localStorage 的初始化
 document.addEventListener('DOMContentLoaded', function() {
   updateNavMemberState();
   // 關閉 login modal 時點背景也可關閉
-  const lm = document.getElementById('login-modal');
+  var lm = document.getElementById('login-modal');
   if(lm) lm.addEventListener('click', function(e){ if(e.target===lm) closeLoginModal(); });
 });
 
@@ -3699,12 +3698,7 @@ function initBirthdaySelects() {
   daySel.addEventListener('change', syncHidden);
 }
 
-// 開啟加入 Modal 時初始化
-const _origOpenJoin = window.openJoinModal;
-window.openJoinModal = function() {
-  if (_origOpenJoin) _origOpenJoin();
-  setTimeout(initBirthdaySelects, 100);
-};
+// 載入時也預先初始化生日下拉
 document.addEventListener('DOMContentLoaded', initBirthdaySelects);
 
 </script>
