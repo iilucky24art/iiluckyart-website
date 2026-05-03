@@ -3204,32 +3204,36 @@ function closeJoinModal() {
   if(modal) modal.style.display = 'none';
 }
 
-async function submitJoinMember(e) {
+function submitJoinMember(e) {
   e.preventDefault();
-  const btn = document.getElementById('jm-submit');
-  const form = e.target;
-  const name = document.getElementById('jm-name')?.value.trim();
-  const phone = document.getElementById('jm-phone')?.value.trim();
-  const birthday = document.getElementById('jm-birthday')?.value;
-  const email = document.getElementById('jm-email')?.value.trim();
-  const lineId = document.getElementById('jm-line')?.value.trim();
+  var btn = document.getElementById('jm-submit');
+  var form = e.target;
+  var nameEl = document.getElementById('jm-name');
+  var phoneEl = document.getElementById('jm-phone');
+  var bdayEl = document.getElementById('jm-birthday');
+  var emailEl = document.getElementById('jm-email');
+  var lineEl = document.getElementById('jm-line');
+
+  var name = nameEl ? nameEl.value.trim() : '';
+  var phone = phoneEl ? phoneEl.value.trim() : '';
+  var birthday = bdayEl ? bdayEl.value : '';
+  var email = emailEl ? emailEl.value.trim() : '';
+  var lineId = lineEl ? lineEl.value.trim() : '';
 
   // 必填驗證
-  if(!name || !phone || !birthday) {
-    const yr = document.getElementById('jm-bday-year');
-    const mo = document.getElementById('jm-bday-month');
-    const dy = document.getElementById('jm-bday-day');
-    [yr,mo,dy].forEach(el => { if(el && !el.value) el.style.borderColor='#B76E79'; });
+  if (!name || !phone || !birthday) {
+    var yr = document.getElementById('jm-bday-year');
+    var mo = document.getElementById('jm-bday-month');
+    var dy = document.getElementById('jm-bday-day');
+    [yr, mo, dy].forEach(function(el) {
+      if (el && !el.value) el.style.borderColor = '#B76E79';
+    });
     return;
   }
-
-  // Email 必填(因為要寄認證信)
-  if(!email) {
-    const emailInput = document.getElementById('jm-email');
-    if (emailInput) {
-      emailInput.style.borderColor = '#B76E79';
-      emailInput.focus();
-      emailInput.placeholder = '請填寫 Email,我們會寄認證信給您';
+  if (!email) {
+    if (emailEl) {
+      emailEl.style.borderColor = '#B76E79';
+      emailEl.focus();
     }
     return;
   }
@@ -3237,168 +3241,153 @@ async function submitJoinMember(e) {
   btn.textContent = '寄送認證信中...';
   btn.disabled = true;
 
-  // 呼叫 Supabase Auth OTP API:寄 magic link 並把基本資料存進 user_metadata
-  try {
-    const res = await fetch(`${SB_URL}/auth/v1/otp`, {
-      method: 'POST',
-      headers: { ...SB_HEADERS, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: email,
-        create_user: true,
-        data: {
-          name: name,
-          phone: phone,
-          birthday: birthday,
-          line_id: lineId || null
-        }
-      })
-    });
-
-    if(res.ok) {
-      // 寄信成功 → 把表單換成「請收信」訊息
-      const modalContent = form.parentElement;
-      if (modalContent) {
-        modalContent.innerHTML = `
-          <div style="text-align:center;padding:40px 20px;">
-            <div style="font-size:56px;margin-bottom:20px;">📧</div>
-            <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--white);margin-bottom:8px;">認證信已寄出</div>
-            <div style="font-size:11px;letter-spacing:4px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:24px;">PLEASE CHECK YOUR EMAIL</div>
-            <div style="font-size:13px;color:var(--muted);line-height:2;margin-bottom:24px;">
-              我們已寄出認證信至<br>
-              <span style="color:var(--gold);font-size:14px;">${email}</span>
-            </div>
-            <div style="background:rgba(212,175,55,0.05);border:1px solid var(--border);border-radius:8px;padding:16px;margin:0 0 20px;">
-              <div style="font-size:12px;color:var(--gold3);line-height:1.8;">
-                請至信箱點擊認證連結<br>
-                點擊後將自動完成註冊與登入
-              </div>
-            </div>
-            <div style="font-size:11px;color:var(--muted);line-height:1.8;">
-              若 5 分鐘內未收到,請查看「垃圾郵件」匣<br>
-              或確認 Email 拼寫是否正確
-            </div>
-            <button onclick="closeJoinModal()" style="margin-top:24px;padding:10px 32px;background:transparent;border:1px solid var(--border);color:var(--muted);font-size:12px;letter-spacing:3px;border-radius:4px;cursor:pointer;font-family:'Noto Serif TC',serif;">關閉</button>
-          </div>
-        `;
-      }
-    } else {
-      // 寄信失敗
-      let errMsg = '寄送失敗,請稍後再試';
-      try {
-        const errData = await res.json();
-        if (errData.msg && errData.msg.includes('rate limit')) {
-          errMsg = '寄送頻率過高,請等 60 秒後再試';
-        } else if (errData.msg) {
-          errMsg = errData.msg;
-        }
-      } catch(_) {}
-      btn.textContent = '✗ ' + errMsg;
-      btn.style.background = 'linear-gradient(135deg,#B76E79,#8B5A6B)';
-      btn.style.color = '#fff';
-      setTimeout(() => {
-        btn.textContent = '立即加入會員';
-        btn.style.background = '';
-        btn.style.color = '';
-        btn.disabled = false;
-      }, 3000);
+  var payload = {
+    email: email,
+    create_user: true,
+    data: {
+      name: name,
+      phone: phone,
+      birthday: birthday,
+      line_id: lineId || null
     }
-  } catch(err) {
-    btn.textContent = '✗ 連線失敗,請檢查網路';
+  };
+
+  fetch(SB_URL + '/auth/v1/otp', {
+    method: 'POST',
+    headers: {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + SB_KEY,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  }).then(function(res) {
+    if (res.ok) {
+      // 成功 - 切換到「請收信」畫面
+      var modalContent = form.parentElement;
+      if (modalContent) {
+        modalContent.innerHTML =
+          '<div style="text-align:center;padding:40px 20px;">' +
+            '<div style="font-size:56px;margin-bottom:20px;">📧</div>' +
+            '<div style="font-family:\'Cormorant Garamond\',serif;font-size:24px;font-weight:300;color:var(--white);margin-bottom:8px;">認證信已寄出</div>' +
+            '<div style="font-size:11px;letter-spacing:4px;color:var(--gold);font-family:\'Cinzel\',serif;margin-bottom:24px;">PLEASE CHECK YOUR EMAIL</div>' +
+            '<div style="font-size:13px;color:var(--muted);line-height:2;margin-bottom:24px;">我們已寄出認證信至<br><span style="color:var(--gold);font-size:14px;">' + email + '</span></div>' +
+            '<div style="background:rgba(212,175,55,0.05);border:1px solid var(--border);border-radius:8px;padding:16px;margin:0 0 20px;">' +
+              '<div style="font-size:12px;color:var(--gold3);line-height:1.8;">請至信箱點擊認證連結<br>點擊後將自動完成註冊與登入</div>' +
+            '</div>' +
+            '<div style="font-size:11px;color:var(--muted);line-height:1.8;">若 5 分鐘內未收到,請查看「垃圾郵件」匣<br>或確認 Email 拼寫是否正確</div>' +
+            '<button onclick="closeJoinModal()" style="margin-top:24px;padding:10px 32px;background:transparent;border:1px solid var(--border);color:var(--muted);font-size:12px;letter-spacing:3px;border-radius:4px;cursor:pointer;font-family:\'Noto Serif TC\',serif;">關閉</button>' +
+          '</div>';
+      }
+      return null;
+    } else {
+      return res.text().then(function(t) {
+        var errMsg = '寄送失敗,請稍後再試';
+        try {
+          var d = JSON.parse(t);
+          if (d && d.msg) {
+            errMsg = d.msg.indexOf('rate limit') > -1 ? '寄送頻率過高,請等 60 秒後再試' : d.msg;
+          }
+        } catch (_) {}
+        btn.textContent = '✗ ' + errMsg;
+        btn.style.background = 'linear-gradient(135deg,#B76E79,#8B5A6B)';
+        btn.style.color = '#fff';
+        setTimeout(function() {
+          btn.textContent = '立即加入會員';
+          btn.style.background = '';
+          btn.style.color = '';
+          btn.disabled = false;
+        }, 3000);
+      });
+    }
+  }).catch(function(err) {
+    btn.textContent = '✗ 連線失敗:' + (err && err.message ? err.message : '未知錯誤');
     btn.style.background = 'linear-gradient(135deg,#B76E79,#8B5A6B)';
     btn.style.color = '#fff';
-    setTimeout(() => {
+    setTimeout(function() {
       btn.textContent = '立即加入會員';
       btn.style.background = '';
       btn.style.color = '';
       btn.disabled = false;
-    }, 3000);
-  }
+    }, 4000);
+  });
 }
 
 // ── Magic Link 認證 callback:處理使用者點 email 連結回到網站的情況 ──
-async function handleAuthCallback() {
-  const hash = window.location.hash;
+function handleAuthCallback() {
+  var hash = window.location.hash;
   if (!hash || hash.indexOf('access_token=') === -1) return;
 
-  const params = new URLSearchParams(hash.substring(1));
-  const accessToken = params.get('access_token');
-  const refreshToken = params.get('refresh_token');
+  var params = new URLSearchParams(hash.substring(1));
+  var accessToken = params.get('access_token');
+  var refreshToken = params.get('refresh_token');
   if (!accessToken) return;
 
-  try {
-    // 用 token 取得使用者資料
-    const userRes = await fetch(`${SB_URL}/auth/v1/user`, {
-      headers: { ...SB_HEADERS, 'Authorization': 'Bearer ' + accessToken }
-    });
-    if (!userRes.ok) throw new Error('Failed to fetch user');
-    const user = await userRes.json();
-    const meta = user.user_metadata || {};
-
-    // 嘗試找已存在的 member
-    let member = null;
-    try {
-      const existRes = await fetch(
-        `${SB_URL}/rest/v1/members?phone=eq.${encodeURIComponent(meta.phone || '')}&select=*`,
-        { headers: SB_HEADERS }
-      );
-      const existing = await existRes.json();
-      if (Array.isArray(existing) && existing.length > 0) {
-        member = existing[0];
-      }
-    } catch(_) {}
-
-    // 如果不存在,新增 member
-    if (!member) {
-      const newMember = {
-        name: meta.name || (user.email || '').split('@')[0],
-        phone: meta.phone || '',
-        email: user.email,
-        birthday: meta.birthday || null,
-        line_id: meta.line_id || null,
-        level: '一般',
-        points: 100,
-        total_spent: 0,
-        created_at: new Date().toISOString()
-      };
-      try {
-        const insertRes = await fetch(`${SB_URL}/rest/v1/members`, {
-          method: 'POST',
-          headers: { ...SB_HEADERS, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
-          body: JSON.stringify(newMember)
-        });
-        if (insertRes.ok) {
-          const inserted = await insertRes.json();
-          member = (Array.isArray(inserted) && inserted.length > 0) ? inserted[0] : newMember;
-        } else {
-          member = newMember;
-        }
-      } catch(_) {
-        member = newMember;
-      }
+  // 1. 取得 user 資料
+  fetch(SB_URL + '/auth/v1/user', {
+    headers: {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + accessToken
     }
+  }).then(function(res) {
+    if (!res.ok) throw new Error('Failed to fetch user');
+    return res.json();
+  }).then(function(user) {
+    var meta = user.user_metadata || {};
+    var phone = meta.phone || '';
 
-    // 寫入 localStorage 並更新 UI
+    // 2. 看 members 表有沒有這人
+    return fetch(SB_URL + '/rest/v1/members?phone=eq.' + encodeURIComponent(phone) + '&select=*', {
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+    }).then(function(r) { return r.ok ? r.json() : []; })
+      .then(function(existing) {
+        if (Array.isArray(existing) && existing.length > 0) {
+          return existing[0];
+        }
+        // 3. 沒有就新增
+        var newMember = {
+          name: meta.name || (user.email || '').split('@')[0],
+          phone: phone,
+          email: user.email,
+          birthday: meta.birthday || null,
+          line_id: meta.line_id || null,
+          level: '一般',
+          points: 100,
+          total_spent: 0,
+          created_at: new Date().toISOString()
+        };
+        return fetch(SB_URL + '/rest/v1/members', {
+          method: 'POST',
+          headers: {
+            'apikey': SB_KEY,
+            'Authorization': 'Bearer ' + SB_KEY,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
+          },
+          body: JSON.stringify(newMember)
+        }).then(function(r) { return r.ok ? r.json() : [newMember]; })
+          .then(function(arr) { return Array.isArray(arr) && arr.length > 0 ? arr[0] : newMember; })
+          .catch(function() { return newMember; });
+      });
+  }).then(function(member) {
     localStorage.setItem('ila_member', JSON.stringify(member));
     localStorage.setItem('ila_auth_token', accessToken);
     if (refreshToken) localStorage.setItem('ila_refresh_token', refreshToken);
-
-    // 清掉 URL hash 避免 token 殘留
     history.replaceState(null, '', window.location.pathname + window.location.search);
-
     if (typeof updateNavMemberState === 'function') updateNavMemberState();
     if (typeof showMemberToast === 'function') {
-      showMemberToast('🎉 歡迎加入易藍琪,' + (member.name || '會員') + '！');
+      showMemberToast('歡迎加入易藍琪,' + (member.name || '會員') + '！');
     }
-  } catch(err) {
+  }).catch(function(err) {
     console.error('Auth callback error:', err);
-    if (typeof showMemberToast === 'function') {
-      showMemberToast('認證處理失敗,請重新嘗試');
-    }
-  }
+  });
 }
 
 // 在 page load 時執行
-document.addEventListener('DOMContentLoaded', handleAuthCallback);
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', handleAuthCallback);
+} else {
+  handleAuthCallback();
+}
 
 // ── 手機選單 ──
 function openMobileMenu() {
