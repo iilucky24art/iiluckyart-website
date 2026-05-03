@@ -1958,8 +1958,8 @@ footer {
           </div>
         </div>
         <div style="margin-bottom:14px;">
-          <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">EMAIL</label>
-          <input id="jm-email" type="email" class="form-input" placeholder="電子信箱（選填）" style="width:100%;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
+          <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">EMAIL <span style="color:#B76E79;">*</span></label>
+          <input required id="jm-email" type="email" class="form-input" placeholder="電子信箱（用於收取認證信）" style="width:100%;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
         </div>
         <div style="margin-bottom:20px;">
           <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">LINE ID</label>
@@ -3210,8 +3210,11 @@ async function submitJoinMember(e) {
   const form = e.target;
   const name = document.getElementById('jm-name')?.value.trim();
   const phone = document.getElementById('jm-phone')?.value.trim();
-
   const birthday = document.getElementById('jm-birthday')?.value;
+  const email = document.getElementById('jm-email')?.value.trim();
+  const lineId = document.getElementById('jm-line')?.value.trim();
+
+  // 必填驗證
   if(!name || !phone || !birthday) {
     const yr = document.getElementById('jm-bday-year');
     const mo = document.getElementById('jm-bday-month');
@@ -3220,55 +3223,182 @@ async function submitJoinMember(e) {
     return;
   }
 
-  btn.textContent = '處理中...';
+  // Email 必填(因為要寄認證信)
+  if(!email) {
+    const emailInput = document.getElementById('jm-email');
+    if (emailInput) {
+      emailInput.style.borderColor = '#B76E79';
+      emailInput.focus();
+      emailInput.placeholder = '請填寫 Email,我們會寄認證信給您';
+    }
+    return;
+  }
+
+  btn.textContent = '寄送認證信中...';
   btn.disabled = true;
 
-  const member = {
-    name,
-    phone,
-    email: document.getElementById('jm-email')?.value.trim() || null,
-    birthday: document.getElementById('jm-birthday')?.value || null,
-    level: '一般',
-    points: 100,
-    total_spent: 0,
-    created_at: new Date().toISOString()
-  };
+  // 呼叫 Supabase Auth OTP API:寄 magic link 並把基本資料存進 user_metadata
+  try {
+    const res = await fetch(`${SB_URL}/auth/v1/otp`, {
+      method: 'POST',
+      headers: { ...SB_HEADERS, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: email,
+        create_user: true,
+        data: {
+          name: name,
+          phone: phone,
+          birthday: birthday,
+          line_id: lineId || null
+        }
+      })
+    });
 
-  // 統一的「成功完成 → 自動關閉 modal」流程
-  function finishAndClose(message, delay) {
-    btn.textContent = message;
-    btn.style.background = 'linear-gradient(135deg,#10b981,#059669)';
+    if(res.ok) {
+      // 寄信成功 → 把表單換成「請收信」訊息
+      const modalContent = form.parentElement;
+      if (modalContent) {
+        modalContent.innerHTML = `
+          <div style="text-align:center;padding:40px 20px;">
+            <div style="font-size:56px;margin-bottom:20px;">📧</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--white);margin-bottom:8px;">認證信已寄出</div>
+            <div style="font-size:11px;letter-spacing:4px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:24px;">PLEASE CHECK YOUR EMAIL</div>
+            <div style="font-size:13px;color:var(--muted);line-height:2;margin-bottom:24px;">
+              我們已寄出認證信至<br>
+              <span style="color:var(--gold);font-size:14px;">${email}</span>
+            </div>
+            <div style="background:rgba(212,175,55,0.05);border:1px solid var(--border);border-radius:8px;padding:16px;margin:0 0 20px;">
+              <div style="font-size:12px;color:var(--gold3);line-height:1.8;">
+                請至信箱點擊認證連結<br>
+                點擊後將自動完成註冊與登入
+              </div>
+            </div>
+            <div style="font-size:11px;color:var(--muted);line-height:1.8;">
+              若 5 分鐘內未收到,請查看「垃圾郵件」匣<br>
+              或確認 Email 拼寫是否正確
+            </div>
+            <button onclick="closeJoinModal()" style="margin-top:24px;padding:10px 32px;background:transparent;border:1px solid var(--border);color:var(--muted);font-size:12px;letter-spacing:3px;border-radius:4px;cursor:pointer;font-family:'Noto Serif TC',serif;">關閉</button>
+          </div>
+        `;
+      }
+    } else {
+      // 寄信失敗
+      let errMsg = '寄送失敗,請稍後再試';
+      try {
+        const errData = await res.json();
+        if (errData.msg && errData.msg.includes('rate limit')) {
+          errMsg = '寄送頻率過高,請等 60 秒後再試';
+        } else if (errData.msg) {
+          errMsg = errData.msg;
+        }
+      } catch(_) {}
+      btn.textContent = '✗ ' + errMsg;
+      btn.style.background = 'linear-gradient(135deg,#B76E79,#8B5A6B)';
+      btn.style.color = '#fff';
+      setTimeout(() => {
+        btn.textContent = '立即加入會員';
+        btn.style.background = '';
+        btn.style.color = '';
+        btn.disabled = false;
+      }, 3000);
+    }
+  } catch(err) {
+    btn.textContent = '✗ 連線失敗,請檢查網路';
+    btn.style.background = 'linear-gradient(135deg,#B76E79,#8B5A6B)';
     btn.style.color = '#fff';
     setTimeout(() => {
-      try { closeJoinModal(); } catch(_) {}
       btn.textContent = '立即加入會員';
       btn.style.background = '';
       btn.style.color = '';
       btn.disabled = false;
-      try { form && form.reset(); } catch(_) {}
-    }, delay);
-  }
-
-  try {
-    const res = await fetch(`${SB_URL}/rest/v1/members`, {
-      method: 'POST',
-      headers: { ...SB_HEADERS, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-      body: JSON.stringify(member)
-    });
-    if(res.ok || res.status === 201 || res.status === 204) {
-      // 成功寫入 Supabase
-      localStorage.setItem('ila_member', JSON.stringify(member));
-      if(typeof updateNavMemberState === 'function') updateNavMemberState();
-      finishAndClose('🎉 歡迎加入易藍琪！', 1800);
-    } else {
-      // API 回傳錯誤狀態，但仍視為「申請已收到」
-      finishAndClose('✅ 申請已收到，我們將盡快聯繫您！', 1800);
-    }
-  } catch(err) {
-    // 網路錯誤也要自動關閉（這就是原本的 bug：沒有 setTimeout 關 modal）
-    finishAndClose('✅ 申請已送出！', 1800);
+    }, 3000);
   }
 }
+
+// ── Magic Link 認證 callback:處理使用者點 email 連結回到網站的情況 ──
+async function handleAuthCallback() {
+  const hash = window.location.hash;
+  if (!hash || hash.indexOf('access_token=') === -1) return;
+
+  const params = new URLSearchParams(hash.substring(1));
+  const accessToken = params.get('access_token');
+  const refreshToken = params.get('refresh_token');
+  if (!accessToken) return;
+
+  try {
+    // 用 token 取得使用者資料
+    const userRes = await fetch(`${SB_URL}/auth/v1/user`, {
+      headers: { ...SB_HEADERS, 'Authorization': 'Bearer ' + accessToken }
+    });
+    if (!userRes.ok) throw new Error('Failed to fetch user');
+    const user = await userRes.json();
+    const meta = user.user_metadata || {};
+
+    // 嘗試找已存在的 member
+    let member = null;
+    try {
+      const existRes = await fetch(
+        `${SB_URL}/rest/v1/members?phone=eq.${encodeURIComponent(meta.phone || '')}&select=*`,
+        { headers: SB_HEADERS }
+      );
+      const existing = await existRes.json();
+      if (Array.isArray(existing) && existing.length > 0) {
+        member = existing[0];
+      }
+    } catch(_) {}
+
+    // 如果不存在,新增 member
+    if (!member) {
+      const newMember = {
+        name: meta.name || (user.email || '').split('@')[0],
+        phone: meta.phone || '',
+        email: user.email,
+        birthday: meta.birthday || null,
+        line_id: meta.line_id || null,
+        level: '一般',
+        points: 100,
+        total_spent: 0,
+        created_at: new Date().toISOString()
+      };
+      try {
+        const insertRes = await fetch(`${SB_URL}/rest/v1/members`, {
+          method: 'POST',
+          headers: { ...SB_HEADERS, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+          body: JSON.stringify(newMember)
+        });
+        if (insertRes.ok) {
+          const inserted = await insertRes.json();
+          member = (Array.isArray(inserted) && inserted.length > 0) ? inserted[0] : newMember;
+        } else {
+          member = newMember;
+        }
+      } catch(_) {
+        member = newMember;
+      }
+    }
+
+    // 寫入 localStorage 並更新 UI
+    localStorage.setItem('ila_member', JSON.stringify(member));
+    localStorage.setItem('ila_auth_token', accessToken);
+    if (refreshToken) localStorage.setItem('ila_refresh_token', refreshToken);
+
+    // 清掉 URL hash 避免 token 殘留
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+
+    if (typeof updateNavMemberState === 'function') updateNavMemberState();
+    if (typeof showMemberToast === 'function') {
+      showMemberToast('🎉 歡迎加入易藍琪,' + (member.name || '會員') + '！');
+    }
+  } catch(err) {
+    console.error('Auth callback error:', err);
+    if (typeof showMemberToast === 'function') {
+      showMemberToast('認證處理失敗,請重新嘗試');
+    }
+  }
+}
+
+// 在 page load 時執行
+document.addEventListener('DOMContentLoaded', handleAuthCallback);
 
 // ── 手機選單 ──
 function openMobileMenu() {
