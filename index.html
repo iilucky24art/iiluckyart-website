@@ -1956,7 +1956,6 @@ footer {
             </div>
             <input type="hidden" id="jm-birthday">
           </div>
-        </div>
         <div style="margin-bottom:14px;">
           <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">EMAIL <span style="color:#B76E79;">*</span></label>
           <input required id="jm-email" type="email" class="form-input" placeholder="電子信箱（用於收取認證信）" style="width:100%;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
@@ -1970,7 +1969,7 @@ footer {
           <input type="checkbox" required id="jm-agree" style="margin-top:3px;accent-color:var(--gold);">
           <label for="jm-agree" style="font-size:12px;color:var(--muted);line-height:1.8;cursor:pointer;">我同意易藍琪蒐集我的個人資料，用於會員服務、優惠通知及活動資訊</label>
         </div>
-        <button type="submit" id="jm-submit" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:4px;color:#000;font-size:12px;letter-spacing:4px;font-family:'Noto Serif TC',serif;cursor:pointer;font-weight:700;">立即加入會員</button>
+        <button type="button" onclick="submitJoinMember(event)" id="jm-submit" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:4px;color:#000;font-size:12px;letter-spacing:4px;font-family:'Noto Serif TC',serif;cursor:pointer;font-weight:700;">立即加入會員</button>
       </form>
     </div>
   </div>
@@ -2476,7 +2475,7 @@ const courseData = {
   'spray-diy':     { title:'東方艾草能量噴霧調製', price:'$2,200' },
 };
 
-async // 點擊 modal 外面關閉
+// 點擊 modal 外面關閉
 document.getElementById('course-modal')?.addEventListener('click', function(e) {
   if(e.target === this) closeCourseModal();
 });
@@ -2561,7 +2560,7 @@ async function loadWebNews() {
 }
 
 // ── 提交諮詢表單到 Supabase ──
-async // ── 初始化官網資料 ──
+// ── 初始化官網資料 ──
 async function initWebsite() {
   await loadWebProducts();
   await loadWebNews();
@@ -3206,9 +3205,11 @@ function closeJoinModal() {
 }
 
 function submitJoinMember(e) {
-  e.preventDefault();
+  if (e && e.preventDefault) e.preventDefault();
   var btn = document.getElementById('jm-submit');
-  var form = e.target;
+  // 找 form 容器:先嘗試 e.target 是 form,否則用 querySelector 找
+  var form = (e && e.target && e.target.tagName === 'FORM') ? e.target : document.querySelector('#join-member-modal form');
+  if (!form) form = btn ? btn.parentElement : null;
 
   var nameEl = document.getElementById('jm-name');
   var phoneEl = document.getElementById('jm-phone');
@@ -3222,8 +3223,22 @@ function submitJoinMember(e) {
   var email = emailEl ? emailEl.value.trim() : '';
   var lineId = lineEl ? lineEl.value.trim() : '';
 
+  // 條款同意驗證
+  var agreeEl = document.getElementById('jm-agree');
+  if (agreeEl && !agreeEl.checked) {
+    btn.textContent = '請勾選同意條款';
+    btn.style.background = 'linear-gradient(135deg,#B76E79,#8B5A6B)';
+    btn.style.color = '#fff';
+    setTimeout(function() {
+      btn.textContent = '立即加入會員';
+      btn.style.background = '';
+      btn.style.color = '';
+    }, 2000);
+    return;
+  }
+
   // 必填驗證
-  if (!name || !phone || !birthday) {
+  if (!name || !phone || !birthday || !email) {
     var yr = document.getElementById('jm-bday-year');
     var mo = document.getElementById('jm-bday-month');
     var dy = document.getElementById('jm-bday-day');
@@ -3232,6 +3247,7 @@ function submitJoinMember(e) {
     });
     if (!name && nameEl) nameEl.style.borderColor = '#B76E79';
     if (!phone && phoneEl) phoneEl.style.borderColor = '#B76E79';
+    if (!email && emailEl) emailEl.style.borderColor = '#B76E79';
     return;
   }
 
