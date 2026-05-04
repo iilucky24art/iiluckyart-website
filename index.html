@@ -2495,9 +2495,9 @@ function filterProducts(cat, btn) {
 }
 
 // ── Supabase 串接 ──
-const SB_URL = 'https://vjpwqikvvzwemtkytdfb.supabase.co';
-const SB_KEY = ['sb_publishable','n0qlYiJFf4RdLAhzN7NMNA','Hug2X5DQ'].join('_');
-const SB_HEADERS = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
+var SB_URL = 'https://vjpwqikvvzwemtkytdfb.supabase.co';
+var SB_KEY = ['sb_publishable','n0qlYiJFf4RdLAhzN7NMNA','Hug2X5DQ'].join('_');
+var SB_HEADERS = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
 
 async function sbFetch(table, query='') {
   try {
@@ -3209,6 +3209,7 @@ function submitJoinMember(e) {
   e.preventDefault();
   var btn = document.getElementById('jm-submit');
   var form = e.target;
+
   var nameEl = document.getElementById('jm-name');
   var phoneEl = document.getElementById('jm-phone');
   var bdayEl = document.getElementById('jm-birthday');
@@ -3229,79 +3230,90 @@ function submitJoinMember(e) {
     [yr, mo, dy].forEach(function(el) {
       if (el && !el.value) el.style.borderColor = '#B76E79';
     });
-    return;
-  }
-  if (!email) {
-    if (emailEl) {
-      emailEl.style.borderColor = '#B76E79';
-      emailEl.focus();
-    }
+    if (!name && nameEl) nameEl.style.borderColor = '#B76E79';
+    if (!phone && phoneEl) phoneEl.style.borderColor = '#B76E79';
     return;
   }
 
-  btn.textContent = '寄送認證信中...';
+  btn.textContent = '處理中...';
   btn.disabled = true;
 
-  var payload = {
-    email: email,
-    create_user: true,
-    data: {
-      name: name,
-      phone: phone,
-      birthday: birthday,
-      line_id: lineId || null
-    }
+  var member = {
+    name: name,
+    phone: phone,
+    email: email || null,
+    birthday: birthday,
+    line_id: lineId || null,
+    level: '一般',
+    points: 100,
+    total_spent: 0,
+    created_at: new Date().toISOString()
   };
 
-  fetch(SB_URL + '/auth/v1/otp', {
+  // 直接寫入 members table - 簡單、可靠、立即生效
+  fetch('https://vjpwqikvvzwemtkytdfb.supabase.co/rest/v1/members', {
     method: 'POST',
     headers: {
       'apikey': SB_KEY,
       'Authorization': 'Bearer ' + SB_KEY,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation'
     },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(member)
   }).then(function(res) {
-    if (res.ok) {
-      // 成功 - 切換到「請收信」畫面
+    return res.text().then(function(t) {
+      return { ok: res.ok, status: res.status, body: t };
+    });
+  }).then(function(r) {
+    if (r.ok) {
+      // 成功 - 寫入 localStorage 並登入
+      var saved = member;
+      try {
+        var arr = JSON.parse(r.body);
+        if (Array.isArray(arr) && arr.length > 0) saved = arr[0];
+      } catch (_) {}
+
+      try { localStorage.setItem('ila_member', JSON.stringify(saved)); } catch (_) {}
+      if (typeof updateNavMemberState === 'function') updateNavMemberState();
+
+      // 切換到歡迎畫面
       var modalContent = form.parentElement;
       if (modalContent) {
         modalContent.innerHTML =
           '<div style="text-align:center;padding:40px 20px;">' +
-            '<div style="font-size:56px;margin-bottom:20px;">📧</div>' +
-            '<div style="font-family:\'Cormorant Garamond\',serif;font-size:24px;font-weight:300;color:var(--white);margin-bottom:8px;">認證信已寄出</div>' +
-            '<div style="font-size:11px;letter-spacing:4px;color:var(--gold);font-family:\'Cinzel\',serif;margin-bottom:24px;">PLEASE CHECK YOUR EMAIL</div>' +
-            '<div style="font-size:13px;color:var(--muted);line-height:2;margin-bottom:24px;">我們已寄出認證信至<br><span style="color:var(--gold);font-size:14px;">' + email + '</span></div>' +
-            '<div style="background:rgba(212,175,55,0.05);border:1px solid var(--border);border-radius:8px;padding:16px;margin:0 0 20px;">' +
-              '<div style="font-size:12px;color:var(--gold3);line-height:1.8;">請至信箱點擊認證連結<br>點擊後將自動完成註冊與登入</div>' +
+            '<div style="font-size:56px;margin-bottom:20px;">🎉</div>' +
+            '<div style="font-family:\'Cormorant Garamond\',serif;font-size:28px;font-weight:300;color:#fff;margin-bottom:8px;">歡迎加入易藍琪</div>' +
+            '<div style="font-size:11px;letter-spacing:4px;color:#C8A84B;font-family:\'Cinzel\',serif;margin-bottom:24px;">WELCOME ' + (name ? name.toUpperCase() : '') + '</div>' +
+            '<div style="font-size:13px;color:var(--muted);line-height:2;margin-bottom:20px;">' +
+              '會員等級:<span style="color:var(--gold);">一般會員</span><br>' +
+              '加入禮 <span style="color:var(--gold);font-size:18px;">100</span> 點已自動發放' +
             '</div>' +
-            '<div style="font-size:11px;color:var(--muted);line-height:1.8;">若 5 分鐘內未收到,請查看「垃圾郵件」匣<br>或確認 Email 拼寫是否正確</div>' +
-            '<button onclick="closeJoinModal()" style="margin-top:24px;padding:10px 32px;background:transparent;border:1px solid var(--border);color:var(--muted);font-size:12px;letter-spacing:3px;border-radius:4px;cursor:pointer;font-family:\'Noto Serif TC\',serif;">關閉</button>' +
+            '<div style="background:rgba(212,175,55,0.05);border:1px solid var(--border);border-radius:8px;padding:16px;margin:0 0 20px;">' +
+              '<div style="font-size:12px;color:var(--gold3);line-height:1.8;">您現在可以開始累積點數,享受專屬優惠</div>' +
+            '</div>' +
+            '<button onclick="closeJoinModal()" style="margin-top:8px;padding:12px 40px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;color:#000;font-size:12px;letter-spacing:4px;border-radius:4px;cursor:pointer;font-family:\'Noto Serif TC\',serif;font-weight:700;">開始探索</button>' +
           '</div>';
       }
-      return null;
     } else {
-      return res.text().then(function(t) {
-        var errMsg = '寄送失敗,請稍後再試';
-        try {
-          var d = JSON.parse(t);
-          if (d && d.msg) {
-            errMsg = d.msg.indexOf('rate limit') > -1 ? '寄送頻率過高,請等 60 秒後再試' : d.msg;
-          }
-        } catch (_) {}
-        btn.textContent = '✗ ' + errMsg;
-        btn.style.background = 'linear-gradient(135deg,#B76E79,#8B5A6B)';
-        btn.style.color = '#fff';
-        setTimeout(function() {
-          btn.textContent = '立即加入會員';
-          btn.style.background = '';
-          btn.style.color = '';
-          btn.disabled = false;
-        }, 3000);
-      });
+      // 失敗
+      var msg = '註冊失敗,請稍後再試';
+      try {
+        var d = JSON.parse(r.body);
+        if (d.message && d.message.indexOf('duplicate') > -1) msg = '此電話或 Email 已註冊過';
+        else if (d.message) msg = d.message;
+      } catch (_) {}
+      btn.textContent = '✗ ' + msg;
+      btn.style.background = 'linear-gradient(135deg,#B76E79,#8B5A6B)';
+      btn.style.color = '#fff';
+      setTimeout(function() {
+        btn.textContent = '立即加入會員';
+        btn.style.background = '';
+        btn.style.color = '';
+        btn.disabled = false;
+      }, 3000);
     }
   }).catch(function(err) {
-    btn.textContent = '✗ 連線失敗:' + (err && err.message ? err.message : '未知錯誤');
+    btn.textContent = '✗ 連線失敗:' + (err && err.message ? err.message : '請檢查網路');
     btn.style.background = 'linear-gradient(135deg,#B76E79,#8B5A6B)';
     btn.style.color = '#fff';
     setTimeout(function() {
@@ -3309,86 +3321,11 @@ function submitJoinMember(e) {
       btn.style.background = '';
       btn.style.color = '';
       btn.disabled = false;
-    }, 4000);
+    }, 3000);
   });
 }
 
-// ── Magic Link 認證 callback:處理使用者點 email 連結回到網站的情況 ──
-function handleAuthCallback() {
-  var hash = window.location.hash;
-  if (!hash || hash.indexOf('access_token=') === -1) return;
-
-  var params = new URLSearchParams(hash.substring(1));
-  var accessToken = params.get('access_token');
-  var refreshToken = params.get('refresh_token');
-  if (!accessToken) return;
-
-  // 1. 取得 user 資料
-  fetch(SB_URL + '/auth/v1/user', {
-    headers: {
-      'apikey': SB_KEY,
-      'Authorization': 'Bearer ' + accessToken
-    }
-  }).then(function(res) {
-    if (!res.ok) throw new Error('Failed to fetch user');
-    return res.json();
-  }).then(function(user) {
-    var meta = user.user_metadata || {};
-    var phone = meta.phone || '';
-
-    // 2. 看 members 表有沒有這人
-    return fetch(SB_URL + '/rest/v1/members?phone=eq.' + encodeURIComponent(phone) + '&select=*', {
-      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
-    }).then(function(r) { return r.ok ? r.json() : []; })
-      .then(function(existing) {
-        if (Array.isArray(existing) && existing.length > 0) {
-          return existing[0];
-        }
-        // 3. 沒有就新增
-        var newMember = {
-          name: meta.name || (user.email || '').split('@')[0],
-          phone: phone,
-          email: user.email,
-          birthday: meta.birthday || null,
-          line_id: meta.line_id || null,
-          level: '一般',
-          points: 100,
-          total_spent: 0,
-          created_at: new Date().toISOString()
-        };
-        return fetch(SB_URL + '/rest/v1/members', {
-          method: 'POST',
-          headers: {
-            'apikey': SB_KEY,
-            'Authorization': 'Bearer ' + SB_KEY,
-            'Content-Type': 'application/json',
-            'Prefer': 'return=representation'
-          },
-          body: JSON.stringify(newMember)
-        }).then(function(r) { return r.ok ? r.json() : [newMember]; })
-          .then(function(arr) { return Array.isArray(arr) && arr.length > 0 ? arr[0] : newMember; })
-          .catch(function() { return newMember; });
-      });
-  }).then(function(member) {
-    localStorage.setItem('ila_member', JSON.stringify(member));
-    localStorage.setItem('ila_auth_token', accessToken);
-    if (refreshToken) localStorage.setItem('ila_refresh_token', refreshToken);
-    history.replaceState(null, '', window.location.pathname + window.location.search);
-    if (typeof updateNavMemberState === 'function') updateNavMemberState();
-    if (typeof showMemberToast === 'function') {
-      showMemberToast('歡迎加入易藍琪,' + (member.name || '會員') + '！');
-    }
-  }).catch(function(err) {
-    console.error('Auth callback error:', err);
-  });
-}
-
-// 在 page load 時執行
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', handleAuthCallback);
-} else {
-  handleAuthCallback();
-}
+// ── (handleAuthCallback 已移除,不再需要 magic link) ──
 
 // ── 手機選單 ──
 function openMobileMenu() {
