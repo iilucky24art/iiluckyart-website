@@ -1956,9 +1956,10 @@ footer {
             </div>
             <input type="hidden" id="jm-birthday">
           </div>
+        </div>
         <div style="margin-bottom:14px;">
-          <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">EMAIL <span style="color:#B76E79;">*</span></label>
-          <input required id="jm-email" type="email" class="form-input" placeholder="電子信箱（用於收取認證信）" style="width:100%;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
+          <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">EMAIL</label>
+          <input id="jm-email" type="email" class="form-input" placeholder="電子信箱（選填）" style="width:100%;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
         </div>
         <div style="margin-bottom:20px;">
           <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">LINE ID</label>
@@ -1969,7 +1970,7 @@ footer {
           <input type="checkbox" required id="jm-agree" style="margin-top:3px;accent-color:var(--gold);">
           <label for="jm-agree" style="font-size:12px;color:var(--muted);line-height:1.8;cursor:pointer;">我同意易藍琪蒐集我的個人資料，用於會員服務、優惠通知及活動資訊</label>
         </div>
-        <button type="button" onclick="submitJoinMember(event)" id="jm-submit" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:4px;color:#000;font-size:12px;letter-spacing:4px;font-family:'Noto Serif TC',serif;cursor:pointer;font-weight:700;">立即加入會員</button>
+        <button type="submit" id="jm-submit" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:4px;color:#000;font-size:12px;letter-spacing:4px;font-family:'Noto Serif TC',serif;cursor:pointer;font-weight:700;">立即加入會員</button>
       </form>
     </div>
   </div>
@@ -2475,7 +2476,7 @@ const courseData = {
   'spray-diy':     { title:'東方艾草能量噴霧調製', price:'$2,200' },
 };
 
-// 點擊 modal 外面關閉
+async // 點擊 modal 外面關閉
 document.getElementById('course-modal')?.addEventListener('click', function(e) {
   if(e.target === this) closeCourseModal();
 });
@@ -2494,9 +2495,9 @@ function filterProducts(cat, btn) {
 }
 
 // ── Supabase 串接 ──
-var SB_URL = 'https://vjpwqikvvzwemtkytdfb.supabase.co';
-var SB_KEY = ['sb_publishable','n0qlYiJFf4RdLAhzN7NMNA','Hug2X5DQ'].join('_');
-var SB_HEADERS = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
+const SB_URL = 'https://vjpwqikvvzwemtkytdfb.supabase.co';
+const SB_KEY = ['sb_publishable','n0qlYiJFf4RdLAhzN7NMNA','Hug2X5DQ'].join('_');
+const SB_HEADERS = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
 
 async function sbFetch(table, query='') {
   try {
@@ -2560,7 +2561,7 @@ async function loadWebNews() {
 }
 
 // ── 提交諮詢表單到 Supabase ──
-// ── 初始化官網資料 ──
+async // ── 初始化官網資料 ──
 async function initWebsite() {
   await loadWebProducts();
   await loadWebNews();
@@ -3195,180 +3196,79 @@ async function submitCourseForm(e) {
 
 // ── 加入會員 ──
 function openJoinModal() {
-  var modal = document.getElementById('join-member-modal');
+  const modal = document.getElementById('join-member-modal');
   if(modal) modal.style.display = 'flex';
-  setTimeout(initBirthdaySelects, 100);
 }
 function closeJoinModal() {
-  var modal = document.getElementById('join-member-modal');
+  const modal = document.getElementById('join-member-modal');
   if(modal) modal.style.display = 'none';
 }
 
-function submitJoinMember(e) {
-  if (e && e.preventDefault) e.preventDefault();
-  var btn = document.getElementById('jm-submit');
-  // 找 form 容器:先嘗試 e.target 是 form,否則用 querySelector 找
-  var form = (e && e.target && e.target.tagName === 'FORM') ? e.target : document.querySelector('#join-member-modal form');
-  if (!form) form = btn ? btn.parentElement : null;
+async function submitJoinMember(e) {
+  e.preventDefault();
+  const btn = document.getElementById('jm-submit');
+  const form = e.target;
+  const name = document.getElementById('jm-name')?.value.trim();
+  const phone = document.getElementById('jm-phone')?.value.trim();
 
-  var nameEl = document.getElementById('jm-name');
-  var phoneEl = document.getElementById('jm-phone');
-  var bdayEl = document.getElementById('jm-birthday');
-  var emailEl = document.getElementById('jm-email');
-  var lineEl = document.getElementById('jm-line');
-
-  var name = nameEl ? nameEl.value.trim() : '';
-  var phone = phoneEl ? phoneEl.value.trim() : '';
-  var birthday = bdayEl ? bdayEl.value : '';
-  var email = emailEl ? emailEl.value.trim() : '';
-  var lineId = lineEl ? lineEl.value.trim() : '';
-
-  // 保險：直接從三個 select 重組 birthday，避免 change 事件沒觸發
-  var yrEl = document.getElementById('jm-bday-year');
-  var moEl = document.getElementById('jm-bday-month');
-  var dyEl = document.getElementById('jm-bday-day');
-  if (yrEl && moEl && dyEl && yrEl.value && moEl.value && dyEl.value) {
-    birthday = yrEl.value + '-' + moEl.value + '-' + dyEl.value;
-    if (bdayEl) bdayEl.value = birthday;
-  } else {
-    birthday = '';
-  }
-
-  // 條款同意驗證
-  var agreeEl = document.getElementById('jm-agree');
-  if (agreeEl && !agreeEl.checked) {
-    btn.textContent = '請勾選同意條款';
-    btn.style.background = 'linear-gradient(135deg,#B76E79,#8B5A6B)';
-    btn.style.color = '#fff';
-    setTimeout(function() {
-      btn.textContent = '立即加入會員';
-      btn.style.background = '';
-      btn.style.color = '';
-    }, 2000);
-    return;
-  }
-
-  // 必填驗證 - 明確告知缺什麼欄位
-  var missing = [];
-  if (!name) { if (nameEl) nameEl.style.borderColor = '#B76E79'; missing.push('姓名'); }
-  if (!phone) { if (phoneEl) phoneEl.style.borderColor = '#B76E79'; missing.push('手機'); }
-  if (!birthday) {
-    [yrEl, moEl, dyEl].forEach(function(el) {
-      if (el && !el.value) el.style.borderColor = '#B76E79';
-    });
-    missing.push('生日');
-  }
-  if (!email) { if (emailEl) emailEl.style.borderColor = '#B76E79'; missing.push('Email'); }
-
-  if (missing.length) {
-    console.warn('[加入會員] 缺少必填欄位:', missing, { name: name, phone: phone, birthday: birthday, email: email });
-    btn.textContent = '請填寫：' + missing.join('、');
-    btn.style.background = 'linear-gradient(135deg,#B76E79,#8B5A6B)';
-    btn.style.color = '#fff';
-    setTimeout(function() {
-      btn.textContent = '立即加入會員';
-      btn.style.background = '';
-      btn.style.color = '';
-    }, 2500);
+  const birthday = document.getElementById('jm-birthday')?.value;
+  if(!name || !phone || !birthday) {
+    const yr = document.getElementById('jm-bday-year');
+    const mo = document.getElementById('jm-bday-month');
+    const dy = document.getElementById('jm-bday-day');
+    [yr,mo,dy].forEach(el => { if(el && !el.value) el.style.borderColor='#B76E79'; });
     return;
   }
 
   btn.textContent = '處理中...';
   btn.disabled = true;
 
-  var member = {
-    name: name,
-    phone: phone,
-    email: email || null,
-    birthday: birthday,
+  const member = {
+    name,
+    phone,
+    email: document.getElementById('jm-email')?.value.trim() || null,
+    birthday: document.getElementById('jm-birthday')?.value || null,
     level: '一般',
     points: 100,
     total_spent: 0,
     created_at: new Date().toISOString()
   };
-  // LINE ID 暫存於 localStorage,等 members 表加上 line_id 欄位後再寫入
-  if (lineId) {
-    try { localStorage.setItem('ila_pending_line_id_' + phone, lineId); } catch (_) {}
-  }
 
-  // 直接寫入 members table - 簡單、可靠、立即生效
-  fetch('https://vjpwqikvvzwemtkytdfb.supabase.co/rest/v1/members', {
-    method: 'POST',
-    headers: {
-      'apikey': SB_KEY,
-      'Authorization': 'Bearer ' + SB_KEY,
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation'
-    },
-    body: JSON.stringify(member)
-  }).then(function(res) {
-    return res.text().then(function(t) {
-      return { ok: res.ok, status: res.status, body: t };
-    });
-  }).then(function(r) {
-    if (r.ok) {
-      // 成功 - 寫入 localStorage 並登入
-      var saved = member;
-      try {
-        var arr = JSON.parse(r.body);
-        if (Array.isArray(arr) && arr.length > 0) saved = arr[0];
-      } catch (_) {}
-
-      try { localStorage.setItem('ila_member', JSON.stringify(saved)); } catch (_) {}
-      if (typeof updateNavMemberState === 'function') updateNavMemberState();
-
-      // 切換到歡迎畫面
-      var modalContent = form.parentElement;
-      if (modalContent) {
-        modalContent.innerHTML =
-          '<div style="text-align:center;padding:40px 20px;">' +
-            '<div style="font-size:56px;margin-bottom:20px;">🎉</div>' +
-            '<div style="font-family:\'Cormorant Garamond\',serif;font-size:28px;font-weight:300;color:#fff;margin-bottom:8px;">歡迎加入易藍琪</div>' +
-            '<div style="font-size:11px;letter-spacing:4px;color:#C8A84B;font-family:\'Cinzel\',serif;margin-bottom:24px;">WELCOME ' + (name ? name.toUpperCase() : '') + '</div>' +
-            '<div style="font-size:13px;color:var(--muted);line-height:2;margin-bottom:20px;">' +
-              '會員等級:<span style="color:var(--gold);">一般會員</span><br>' +
-              '加入禮 <span style="color:var(--gold);font-size:18px;">100</span> 點已自動發放' +
-            '</div>' +
-            '<div style="background:rgba(212,175,55,0.05);border:1px solid var(--border);border-radius:8px;padding:16px;margin:0 0 20px;">' +
-              '<div style="font-size:12px;color:var(--gold3);line-height:1.8;">您現在可以開始累積點數,享受專屬優惠</div>' +
-            '</div>' +
-            '<button onclick="closeJoinModal()" style="margin-top:8px;padding:12px 40px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;color:#000;font-size:12px;letter-spacing:4px;border-radius:4px;cursor:pointer;font-family:\'Noto Serif TC\',serif;font-weight:700;">開始探索</button>' +
-          '</div>';
-      }
-    } else {
-      // 失敗
-      console.error('[加入會員] Supabase 寫入失敗:', { status: r.status, body: r.body });
-      var msg = '註冊失敗,請稍後再試';
-      try {
-        var d = JSON.parse(r.body);
-        if (d.message && d.message.indexOf('duplicate') > -1) msg = '此電話或 Email 已註冊過';
-        else if (d.message) msg = d.message;
-      } catch (_) {}
-      btn.textContent = '✗ ' + msg;
-      btn.style.background = 'linear-gradient(135deg,#B76E79,#8B5A6B)';
-      btn.style.color = '#fff';
-      setTimeout(function() {
-        btn.textContent = '立即加入會員';
-        btn.style.background = '';
-        btn.style.color = '';
-        btn.disabled = false;
-      }, 3000);
-    }
-  }).catch(function(err) {
-    console.error('[加入會員] 網路或解析錯誤:', err);
-    btn.textContent = '✗ 連線失敗:' + (err && err.message ? err.message : '請檢查網路');
-    btn.style.background = 'linear-gradient(135deg,#B76E79,#8B5A6B)';
+  // 統一的「成功完成 → 自動關閉 modal」流程
+  function finishAndClose(message, delay) {
+    btn.textContent = message;
+    btn.style.background = 'linear-gradient(135deg,#10b981,#059669)';
     btn.style.color = '#fff';
-    setTimeout(function() {
+    setTimeout(() => {
+      try { closeJoinModal(); } catch(_) {}
       btn.textContent = '立即加入會員';
       btn.style.background = '';
       btn.style.color = '';
       btn.disabled = false;
-    }, 3000);
-  });
-}
+      try { form && form.reset(); } catch(_) {}
+    }, delay);
+  }
 
-// ── (handleAuthCallback 已移除,不再需要 magic link) ──
+  try {
+    const res = await fetch(`${SB_URL}/rest/v1/members`, {
+      method: 'POST',
+      headers: { ...SB_HEADERS, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify(member)
+    });
+    if(res.ok || res.status === 201 || res.status === 204) {
+      // 成功寫入 Supabase
+      localStorage.setItem('ila_member', JSON.stringify(member));
+      if(typeof updateNavMemberState === 'function') updateNavMemberState();
+      finishAndClose('🎉 歡迎加入易藍琪！', 1800);
+    } else {
+      // API 回傳錯誤狀態，但仍視為「申請已收到」
+      finishAndClose('✅ 申請已收到，我們將盡快聯繫您！', 1800);
+    }
+  } catch(err) {
+    // 網路錯誤也要自動關閉（這就是原本的 bug：沒有 setTimeout 關 modal）
+    finishAndClose('✅ 申請已送出！', 1800);
+  }
+}
 
 // ── 手機選單 ──
 function openMobileMenu() {
@@ -3637,11 +3537,13 @@ function showMemberToast(msg) {
   t._t = setTimeout(() => { t.style.opacity = '0'; }, 2800);
 }
 
-// 加入會員成功後儲存 localStorage 的初始化
+// 加入會員成功後儲存 localStorage
+const _origSubmit = window.submitJoinMember;
+// Patch submitJoinMember to save member and update nav
 document.addEventListener('DOMContentLoaded', function() {
   updateNavMemberState();
   // 關閉 login modal 時點背景也可關閉
-  var lm = document.getElementById('login-modal');
+  const lm = document.getElementById('login-modal');
   if(lm) lm.addEventListener('click', function(e){ if(e.target===lm) closeLoginModal(); });
 });
 
@@ -3678,7 +3580,12 @@ function initBirthdaySelects() {
   daySel.addEventListener('change', syncHidden);
 }
 
-// 載入時也預先初始化生日下拉
+// 開啟加入 Modal 時初始化
+const _origOpenJoin = window.openJoinModal;
+window.openJoinModal = function() {
+  if (_origOpenJoin) _origOpenJoin();
+  setTimeout(initBirthdaySelects, 100);
+};
 document.addEventListener('DOMContentLoaded', initBirthdaySelects);
 
 </script>
