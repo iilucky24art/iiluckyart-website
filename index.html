@@ -3223,6 +3223,17 @@ function submitJoinMember(e) {
   var email = emailEl ? emailEl.value.trim() : '';
   var lineId = lineEl ? lineEl.value.trim() : '';
 
+  // 保險：直接從三個 select 重組 birthday，避免 change 事件沒觸發
+  var yrEl = document.getElementById('jm-bday-year');
+  var moEl = document.getElementById('jm-bday-month');
+  var dyEl = document.getElementById('jm-bday-day');
+  if (yrEl && moEl && dyEl && yrEl.value && moEl.value && dyEl.value) {
+    birthday = yrEl.value + '-' + moEl.value + '-' + dyEl.value;
+    if (bdayEl) bdayEl.value = birthday;
+  } else {
+    birthday = '';
+  }
+
   // 條款同意驗證
   var agreeEl = document.getElementById('jm-agree');
   if (agreeEl && !agreeEl.checked) {
@@ -3237,17 +3248,28 @@ function submitJoinMember(e) {
     return;
   }
 
-  // 必填驗證
-  if (!name || !phone || !birthday || !email) {
-    var yr = document.getElementById('jm-bday-year');
-    var mo = document.getElementById('jm-bday-month');
-    var dy = document.getElementById('jm-bday-day');
-    [yr, mo, dy].forEach(function(el) {
+  // 必填驗證 - 明確告知缺什麼欄位
+  var missing = [];
+  if (!name) { if (nameEl) nameEl.style.borderColor = '#B76E79'; missing.push('姓名'); }
+  if (!phone) { if (phoneEl) phoneEl.style.borderColor = '#B76E79'; missing.push('手機'); }
+  if (!birthday) {
+    [yrEl, moEl, dyEl].forEach(function(el) {
       if (el && !el.value) el.style.borderColor = '#B76E79';
     });
-    if (!name && nameEl) nameEl.style.borderColor = '#B76E79';
-    if (!phone && phoneEl) phoneEl.style.borderColor = '#B76E79';
-    if (!email && emailEl) emailEl.style.borderColor = '#B76E79';
+    missing.push('生日');
+  }
+  if (!email) { if (emailEl) emailEl.style.borderColor = '#B76E79'; missing.push('Email'); }
+
+  if (missing.length) {
+    console.warn('[加入會員] 缺少必填欄位:', missing, { name: name, phone: phone, birthday: birthday, email: email });
+    btn.textContent = '請填寫：' + missing.join('、');
+    btn.style.background = 'linear-gradient(135deg,#B76E79,#8B5A6B)';
+    btn.style.color = '#fff';
+    setTimeout(function() {
+      btn.textContent = '立即加入會員';
+      btn.style.background = '';
+      btn.style.color = '';
+    }, 2500);
     return;
   }
 
@@ -3315,6 +3337,7 @@ function submitJoinMember(e) {
       }
     } else {
       // 失敗
+      console.error('[加入會員] Supabase 寫入失敗:', { status: r.status, body: r.body });
       var msg = '註冊失敗,請稍後再試';
       try {
         var d = JSON.parse(r.body);
@@ -3332,6 +3355,7 @@ function submitJoinMember(e) {
       }, 3000);
     }
   }).catch(function(err) {
+    console.error('[加入會員] 網路或解析錯誤:', err);
     btn.textContent = '✗ 連線失敗:' + (err && err.message ? err.message : '請檢查網路');
     btn.style.background = 'linear-gradient(135deg,#B76E79,#8B5A6B)';
     btn.style.color = '#fff';
