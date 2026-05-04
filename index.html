@@ -1150,6 +1150,8 @@ footer {
   .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
 }
 </style>
+<!-- Supabase JS SDK (for OAuth) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -1173,7 +1175,7 @@ footer {
   </ul>
   <div style="display:flex;gap:10px;align-items:center;">
 
-    <a href="#" onclick="openJoinModal();return false;" class="nav-cta" style="background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;border:none;">✨ 加入會員</a>
+    <a href="#" id="nav-join-btn" onclick="openJoinModal();return false;" class="nav-cta" style="background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;border:none;">✨ 加入會員</a>
     <a href="#" onclick="openLoginModal();return false;" id="nav-member-btn" class="nav-cta" style="background:transparent;border:1px solid rgba(212,175,55,0.5);color:var(--gold);">🔑 登入</a>
   </div>
 </nav>
@@ -1192,7 +1194,7 @@ footer {
   <a href="#" onclick="closeMobileMenu();showPage('news');">最新消息</a>
   <a href="#" onclick="closeMobileMenu();showPage('contact');">預約諮詢</a>
   <div class="mobile-menu-divider"></div>
-  <button class="mobile-join-btn" onclick="closeMobileMenu();openJoinModal();">加入會員</button>
+  <button id="mobile-join-btn" class="mobile-join-btn" onclick="closeMobileMenu();openJoinModal();">加入會員</button>
 </div>
 
 <!-- HERO -->
@@ -1931,6 +1933,22 @@ footer {
         </div>
       </div>
 
+      <!-- Google 快速註冊 -->
+      <button type="button" onclick="signInWithGoogle()" style="width:100%;padding:12px 14px;background:#fff;border:1px solid rgba(212,175,55,0.3);border-radius:6px;color:#1f1f1f;font-size:14px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;display:flex;align-items:center;justify-content:center;gap:10px;font-weight:500;margin-bottom:14px;">
+        <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+          <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+          <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/>
+          <path fill="#FBBC05" d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.347 6.173 0 7.548 0 9s.348 2.827.957 4.042l3.007-2.332z"/>
+          <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+        </svg>
+        使用 Google 帳號加入（最快）
+      </button>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;">
+        <div style="flex:1;height:1px;background:rgba(212,175,55,0.2);"></div>
+        <div style="font-size:11px;color:var(--muted);letter-spacing:2px;">或填寫資料加入</div>
+        <div style="flex:1;height:1px;background:rgba(212,175,55,0.2);"></div>
+      </div>
+
       <!-- 表單 -->
       <form onsubmit="submitJoinMember(event)">
         <div style="margin-bottom:14px;">
@@ -1956,10 +1974,9 @@ footer {
             </div>
             <input type="hidden" id="jm-birthday">
           </div>
-        </div>
         <div style="margin-bottom:14px;">
-          <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">EMAIL</label>
-          <input id="jm-email" type="email" class="form-input" placeholder="電子信箱（選填）" style="width:100%;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
+          <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">EMAIL <span style="color:#B76E79;">*</span></label>
+          <input required id="jm-email" type="email" class="form-input" placeholder="電子信箱（用於收取認證信）" style="width:100%;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
         </div>
         <div style="margin-bottom:20px;">
           <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">LINE ID</label>
@@ -1970,7 +1987,103 @@ footer {
           <input type="checkbox" required id="jm-agree" style="margin-top:3px;accent-color:var(--gold);">
           <label for="jm-agree" style="font-size:12px;color:var(--muted);line-height:1.8;cursor:pointer;">我同意易藍琪蒐集我的個人資料，用於會員服務、優惠通知及活動資訊</label>
         </div>
-        <button type="submit" id="jm-submit" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:4px;color:#000;font-size:12px;letter-spacing:4px;font-family:'Noto Serif TC',serif;cursor:pointer;font-weight:700;">立即加入會員</button>
+        <button type="button" onclick="submitJoinMember(event)" id="jm-submit" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:4px;color:#000;font-size:12px;letter-spacing:4px;font-family:'Noto Serif TC',serif;cursor:pointer;font-weight:700;">立即加入會員</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- 修改會員資料 Modal -->
+<div id="member-edit-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:2000;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:var(--navy2);border:1px solid var(--border);border-radius:16px;max-width:480px;width:100%;position:relative;overflow:hidden;max-height:90vh;overflow-y:auto;">
+    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--rose),transparent);"></div>
+    <button onclick="closeMemberEditModal()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.08);border:none;color:var(--muted);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px;line-height:1;">×</button>
+
+    <div style="padding:32px;">
+      <div style="text-align:center;margin-bottom:28px;">
+        <div style="font-size:32px;margin-bottom:8px;">✏️</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--white);">修改會員資料</div>
+        <div style="font-size:12px;color:var(--gold);letter-spacing:3px;margin-top:4px;font-family:'Cinzel',serif;">EDIT PROFILE</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:8px;line-height:1.8;">更新您的會員資訊，讓我們提供更貼心的服務</div>
+      </div>
+
+      <form onsubmit="submitMemberEdit(event)">
+        <div style="margin-bottom:14px;">
+          <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">YOUR NAME *</label>
+          <input required id="me-name" class="form-input" placeholder="姓名" style="width:100%;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--muted);font-family:'Cinzel',serif;margin-bottom:6px;">PHONE（登入識別，不可修改）</label>
+          <input id="me-phone" readonly style="width:100%;padding:12px;background:rgba(255,255,255,0.02);border:1px solid var(--border);color:var(--muted);border-radius:4px;font-size:14px;outline:none;cursor:not-allowed;box-sizing:border-box;">
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">BIRTHDAY <span style="color:#B76E79;">*</span></label>
+          <div style="display:grid;grid-template-columns:2fr 1.5fr 1.5fr;gap:8px;">
+            <select id="me-bday-year" style="padding:10px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;appearance:auto;">
+              <option value="">年</option>
+            </select>
+            <select id="me-bday-month" style="padding:10px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;appearance:auto;">
+              <option value="">月</option>
+            </select>
+            <select id="me-bday-day" style="padding:10px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;appearance:auto;">
+              <option value="">日</option>
+            </select>
+          </div>
+          <input type="hidden" id="me-birthday">
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">EMAIL <span style="color:#B76E79;">*</span></label>
+          <input required id="me-email" type="email" class="form-input" placeholder="電子信箱" style="width:100%;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
+        </div>
+        <div style="margin-bottom:20px;">
+          <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">LINE ID</label>
+          <input id="me-line" class="form-input" placeholder="LINE ID（選填）" style="width:100%;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
+        </div>
+        <button type="button" onclick="submitMemberEdit(event)" id="me-submit" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:4px;color:#000;font-size:12px;letter-spacing:4px;font-family:'Noto Serif TC',serif;cursor:pointer;font-weight:700;">儲存修改</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- 補完資料 Modal（Google/LINE 首次登入後使用） -->
+<div id="complete-profile-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:2000;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:var(--navy2);border:1px solid var(--border);border-radius:16px;max-width:480px;width:100%;position:relative;overflow:hidden;max-height:90vh;overflow-y:auto;">
+    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--rose),transparent);"></div>
+
+    <div style="padding:32px;">
+      <div style="text-align:center;margin-bottom:24px;">
+        <div style="font-size:32px;margin-bottom:8px;">✨</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--white);">歡迎，再幾個資訊就完成</div>
+        <div style="font-size:11px;color:var(--gold);letter-spacing:3px;margin-top:4px;font-family:'Cinzel',serif;">COMPLETE YOUR PROFILE</div>
+        <div id="cp-greeting" style="font-size:12px;color:var(--muted);margin-top:8px;line-height:1.8;"></div>
+      </div>
+
+      <form onsubmit="submitCompleteProfile(event)">
+        <div style="margin-bottom:14px;">
+          <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">YOUR NAME *</label>
+          <input required id="cp-name" class="form-input" placeholder="姓名" style="width:100%;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">PHONE *</label>
+          <input required id="cp-phone" class="form-input" placeholder="手機號碼" style="width:100%;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;box-sizing:border-box;">
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">BIRTHDAY <span style="color:#B76E79;">*</span></label>
+          <div style="display:grid;grid-template-columns:2fr 1.5fr 1.5fr;gap:8px;">
+            <select id="cp-bday-year" style="padding:10px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;appearance:auto;"><option value="">年</option></select>
+            <select id="cp-bday-month" style="padding:10px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;appearance:auto;"><option value="">月</option></select>
+            <select id="cp-bday-day" style="padding:10px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;appearance:auto;"><option value="">日</option></select>
+          </div>
+          <input type="hidden" id="cp-birthday">
+        </div>
+        <div style="margin-bottom:20px;">
+          <label style="display:block;font-size:10px;letter-spacing:3px;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:6px;">LINE ID</label>
+          <input id="cp-line" class="form-input" placeholder="LINE ID（選填）" style="width:100%;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--white);border-radius:4px;font-size:14px;outline:none;">
+        </div>
+        <button type="button" onclick="submitCompleteProfile(event)" id="cp-submit" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:4px;color:#000;font-size:12px;letter-spacing:4px;font-family:'Noto Serif TC',serif;cursor:pointer;font-weight:700;">完成註冊</button>
+        <div style="text-align:center;margin-top:12px;">
+          <a href="#" onclick="cancelCompleteProfile();return false;" style="font-size:11px;color:var(--muted);text-decoration:none;">取消並登出</a>
+        </div>
       </form>
     </div>
   </div>
@@ -2476,7 +2589,7 @@ const courseData = {
   'spray-diy':     { title:'東方艾草能量噴霧調製', price:'$2,200' },
 };
 
-async // 點擊 modal 外面關閉
+// 點擊 modal 外面關閉
 document.getElementById('course-modal')?.addEventListener('click', function(e) {
   if(e.target === this) closeCourseModal();
 });
@@ -2495,9 +2608,23 @@ function filterProducts(cat, btn) {
 }
 
 // ── Supabase 串接 ──
-const SB_URL = 'https://vjpwqikvvzwemtkytdfb.supabase.co';
-const SB_KEY = ['sb_publishable','n0qlYiJFf4RdLAhzN7NMNA','Hug2X5DQ'].join('_');
-const SB_HEADERS = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
+var SB_URL = 'https://vjpwqikvvzwemtkytdfb.supabase.co';
+var SB_KEY = ['sb_publishable','n0qlYiJFf4RdLAhzN7NMNA','Hug2X5DQ'].join('_');
+var SB_HEADERS = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
+
+// ── Supabase Auth Client (for Google/LINE OAuth) ──
+var sbClient = null;
+try {
+  if (window.supabase && window.supabase.createClient) {
+    sbClient = window.supabase.createClient(SB_URL, SB_KEY, {
+      auth: { detectSessionInUrl: true, persistSession: true, autoRefreshToken: true }
+    });
+  } else {
+    console.warn('[Auth] Supabase JS SDK 尚未載入');
+  }
+} catch (e) {
+  console.error('[Auth] 初始化失敗:', e);
+}
 
 async function sbFetch(table, query='') {
   try {
@@ -2561,7 +2688,7 @@ async function loadWebNews() {
 }
 
 // ── 提交諮詢表單到 Supabase ──
-async // ── 初始化官網資料 ──
+// ── 初始化官網資料 ──
 async function initWebsite() {
   await loadWebProducts();
   await loadWebNews();
@@ -3196,79 +3323,657 @@ async function submitCourseForm(e) {
 
 // ── 加入會員 ──
 function openJoinModal() {
-  const modal = document.getElementById('join-member-modal');
+  var modal = document.getElementById('join-member-modal');
   if(modal) modal.style.display = 'flex';
+  setTimeout(initBirthdaySelects, 100);
 }
 function closeJoinModal() {
-  const modal = document.getElementById('join-member-modal');
+  var modal = document.getElementById('join-member-modal');
   if(modal) modal.style.display = 'none';
 }
 
-async function submitJoinMember(e) {
-  e.preventDefault();
-  const btn = document.getElementById('jm-submit');
-  const form = e.target;
-  const name = document.getElementById('jm-name')?.value.trim();
-  const phone = document.getElementById('jm-phone')?.value.trim();
+function submitJoinMember(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  var btn = document.getElementById('jm-submit');
+  // 找 form 容器:先嘗試 e.target 是 form,否則用 querySelector 找
+  var form = (e && e.target && e.target.tagName === 'FORM') ? e.target : document.querySelector('#join-member-modal form');
+  if (!form) form = btn ? btn.parentElement : null;
 
-  const birthday = document.getElementById('jm-birthday')?.value;
-  if(!name || !phone || !birthday) {
-    const yr = document.getElementById('jm-bday-year');
-    const mo = document.getElementById('jm-bday-month');
-    const dy = document.getElementById('jm-bday-day');
-    [yr,mo,dy].forEach(el => { if(el && !el.value) el.style.borderColor='#B76E79'; });
+  var nameEl = document.getElementById('jm-name');
+  var phoneEl = document.getElementById('jm-phone');
+  var bdayEl = document.getElementById('jm-birthday');
+  var emailEl = document.getElementById('jm-email');
+  var lineEl = document.getElementById('jm-line');
+
+  var name = nameEl ? nameEl.value.trim() : '';
+  var phone = phoneEl ? phoneEl.value.trim() : '';
+  var birthday = bdayEl ? bdayEl.value : '';
+  var email = emailEl ? emailEl.value.trim() : '';
+  var lineId = lineEl ? lineEl.value.trim() : '';
+
+  // 保險：直接從三個 select 重組 birthday，避免 change 事件沒觸發
+  var yrEl = document.getElementById('jm-bday-year');
+  var moEl = document.getElementById('jm-bday-month');
+  var dyEl = document.getElementById('jm-bday-day');
+  if (yrEl && moEl && dyEl && yrEl.value && moEl.value && dyEl.value) {
+    birthday = yrEl.value + '-' + moEl.value + '-' + dyEl.value;
+    if (bdayEl) bdayEl.value = birthday;
+  } else {
+    birthday = '';
+  }
+
+  // 條款同意驗證
+  var agreeEl = document.getElementById('jm-agree');
+  if (agreeEl && !agreeEl.checked) {
+    btn.textContent = '請勾選同意條款';
+    btn.style.background = 'linear-gradient(135deg,#B76E79,#8B5A6B)';
+    btn.style.color = '#fff';
+    setTimeout(function() {
+      btn.textContent = '立即加入會員';
+      btn.style.background = '';
+      btn.style.color = '';
+    }, 2000);
+    return;
+  }
+
+  // 必填驗證 - 明確告知缺什麼欄位
+  var missing = [];
+  if (!name) { if (nameEl) nameEl.style.borderColor = '#B76E79'; missing.push('姓名'); }
+  if (!phone) { if (phoneEl) phoneEl.style.borderColor = '#B76E79'; missing.push('手機'); }
+  if (!birthday) {
+    [yrEl, moEl, dyEl].forEach(function(el) {
+      if (el && !el.value) el.style.borderColor = '#B76E79';
+    });
+    missing.push('生日');
+  }
+  if (!email) { if (emailEl) emailEl.style.borderColor = '#B76E79'; missing.push('Email'); }
+
+  if (missing.length) {
+    console.warn('[加入會員] 缺少必填欄位:', missing, { name: name, phone: phone, birthday: birthday, email: email });
+    btn.textContent = '請填寫：' + missing.join('、');
+    btn.style.background = 'linear-gradient(135deg,#B76E79,#8B5A6B)';
+    btn.style.color = '#fff';
+    setTimeout(function() {
+      btn.textContent = '立即加入會員';
+      btn.style.background = '';
+      btn.style.color = '';
+    }, 2500);
     return;
   }
 
   btn.textContent = '處理中...';
   btn.disabled = true;
 
-  const member = {
-    name,
-    phone,
-    email: document.getElementById('jm-email')?.value.trim() || null,
-    birthday: document.getElementById('jm-birthday')?.value || null,
+  var member = {
+    name: name,
+    phone: phone,
+    email: email || null,
+    birthday: birthday,
     level: '一般',
     points: 100,
     total_spent: 0,
     created_at: new Date().toISOString()
   };
+  // LINE ID 暫存於 localStorage,等 members 表加上 line_id 欄位後再寫入
+  if (lineId) {
+    try { localStorage.setItem('ila_pending_line_id_' + phone, lineId); } catch (_) {}
+  }
 
-  // 統一的「成功完成 → 自動關閉 modal」流程
-  function finishAndClose(message, delay) {
-    btn.textContent = message;
-    btn.style.background = 'linear-gradient(135deg,#10b981,#059669)';
+  // 直接寫入 members table - 簡單、可靠、立即生效
+  fetch('https://vjpwqikvvzwemtkytdfb.supabase.co/rest/v1/members', {
+    method: 'POST',
+    headers: {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + SB_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation'
+    },
+    body: JSON.stringify(member)
+  }).then(function(res) {
+    return res.text().then(function(t) {
+      return { ok: res.ok, status: res.status, body: t };
+    });
+  }).then(function(r) {
+    if (r.ok) {
+      // 成功 - 寫入 localStorage 並登入
+      var saved = member;
+      try {
+        var arr = JSON.parse(r.body);
+        if (Array.isArray(arr) && arr.length > 0) saved = arr[0];
+      } catch (_) {}
+
+      try { localStorage.setItem('ila_member', JSON.stringify(saved)); } catch (_) {}
+      if (typeof updateNavMemberState === 'function') updateNavMemberState();
+
+      // 切換到歡迎畫面
+      var modalContent = form.parentElement;
+      if (modalContent) {
+        modalContent.innerHTML =
+          '<div style="text-align:center;padding:40px 20px;">' +
+            '<div style="font-size:56px;margin-bottom:20px;">🎉</div>' +
+            '<div style="font-family:\'Cormorant Garamond\',serif;font-size:28px;font-weight:300;color:#fff;margin-bottom:8px;">歡迎加入易藍琪</div>' +
+            '<div style="font-size:11px;letter-spacing:4px;color:#C8A84B;font-family:\'Cinzel\',serif;margin-bottom:24px;">WELCOME ' + (name ? name.toUpperCase() : '') + '</div>' +
+            '<div style="font-size:13px;color:var(--muted);line-height:2;margin-bottom:20px;">' +
+              '會員等級:<span style="color:var(--gold);">一般會員</span><br>' +
+              '加入禮 <span style="color:var(--gold);font-size:18px;">100</span> 點已自動發放' +
+            '</div>' +
+            '<div style="background:rgba(212,175,55,0.05);border:1px solid var(--border);border-radius:8px;padding:16px;margin:0 0 20px;">' +
+              '<div style="font-size:12px;color:var(--gold3);line-height:1.8;">您現在可以開始累積點數,享受專屬優惠</div>' +
+            '</div>' +
+            '<button onclick="closeJoinModal()" style="margin-top:8px;padding:12px 40px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;color:#000;font-size:12px;letter-spacing:4px;border-radius:4px;cursor:pointer;font-family:\'Noto Serif TC\',serif;font-weight:700;">開始探索</button>' +
+          '</div>';
+      }
+    } else {
+      // 失敗
+      console.error('[加入會員] Supabase 寫入失敗:', { status: r.status, body: r.body });
+      var msg = '註冊失敗,請稍後再試';
+      try {
+        var d = JSON.parse(r.body);
+        if (d.message && d.message.indexOf('duplicate') > -1) msg = '此電話或 Email 已註冊過';
+        else if (d.message) msg = d.message;
+      } catch (_) {}
+      btn.textContent = '✗ ' + msg;
+      btn.style.background = 'linear-gradient(135deg,#B76E79,#8B5A6B)';
+      btn.style.color = '#fff';
+      setTimeout(function() {
+        btn.textContent = '立即加入會員';
+        btn.style.background = '';
+        btn.style.color = '';
+        btn.disabled = false;
+      }, 3000);
+    }
+  }).catch(function(err) {
+    console.error('[加入會員] 網路或解析錯誤:', err);
+    btn.textContent = '✗ 連線失敗:' + (err && err.message ? err.message : '請檢查網路');
+    btn.style.background = 'linear-gradient(135deg,#B76E79,#8B5A6B)';
     btn.style.color = '#fff';
-    setTimeout(() => {
-      try { closeJoinModal(); } catch(_) {}
+    setTimeout(function() {
       btn.textContent = '立即加入會員';
       btn.style.background = '';
       btn.style.color = '';
       btn.disabled = false;
-      try { form && form.reset(); } catch(_) {}
-    }, delay);
+    }, 3000);
+  });
+}
+
+// ── 修改會員資料 ──
+function openMemberEditModal() {
+  var member = getMember();
+  if (!member) { openLoginModal(); return; }
+
+  var modal = document.getElementById('member-edit-modal');
+  if (!modal) return;
+  modal.style.display = 'flex';
+
+  setTimeout(function() {
+    initEditBirthdaySelects();
+
+    var nameEl = document.getElementById('me-name');
+    var phoneEl = document.getElementById('me-phone');
+    var emailEl = document.getElementById('me-email');
+    var lineEl = document.getElementById('me-line');
+
+    if (nameEl) nameEl.value = member.name || '';
+    if (phoneEl) phoneEl.value = member.phone || '';
+    if (emailEl) emailEl.value = member.email || '';
+
+    if (member.birthday) {
+      var parts = String(member.birthday).split('-');
+      if (parts.length === 3) {
+        var yEl = document.getElementById('me-bday-year');
+        var mEl = document.getElementById('me-bday-month');
+        var dEl = document.getElementById('me-bday-day');
+        if (yEl) yEl.value = parts[0];
+        if (mEl) mEl.value = parts[1];
+        if (dEl) dEl.value = parts[2];
+        var hidden = document.getElementById('me-birthday');
+        if (hidden) hidden.value = member.birthday;
+      }
+    }
+
+    if (lineEl && member.phone) {
+      try { lineEl.value = localStorage.getItem('ila_pending_line_id_' + member.phone) || ''; } catch (_) {}
+    }
+  }, 100);
+}
+
+function closeMemberEditModal() {
+  var modal = document.getElementById('member-edit-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+function initEditBirthdaySelects() {
+  var yearSel = document.getElementById('me-bday-year');
+  var monthSel = document.getElementById('me-bday-month');
+  var daySel = document.getElementById('me-bday-day');
+  if (!yearSel || yearSel.options.length > 1) return;
+
+  var thisYear = new Date().getFullYear();
+  for (var y = thisYear; y >= thisYear - 80; y--) {
+    yearSel.innerHTML += '<option value="' + y + '">' + y + ' 年</option>';
+  }
+  for (var m = 1; m <= 12; m++) {
+    var mm = String(m).padStart(2, '0');
+    monthSel.innerHTML += '<option value="' + mm + '">' + m + ' 月</option>';
+  }
+  for (var d = 1; d <= 31; d++) {
+    var dd = String(d).padStart(2, '0');
+    daySel.innerHTML += '<option value="' + dd + '">' + d + ' 日</option>';
   }
 
-  try {
-    const res = await fetch(`${SB_URL}/rest/v1/members`, {
-      method: 'POST',
-      headers: { ...SB_HEADERS, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-      body: JSON.stringify(member)
+  function syncHidden() {
+    var y = yearSel.value, mo = monthSel.value, da = daySel.value;
+    var hidden = document.getElementById('me-birthday');
+    if (hidden) hidden.value = (y && mo && da) ? (y + '-' + mo + '-' + da) : '';
+    [yearSel, monthSel, daySel].forEach(function(el) { el.style.borderColor = ''; });
+  }
+  yearSel.addEventListener('change', syncHidden);
+  monthSel.addEventListener('change', syncHidden);
+  daySel.addEventListener('change', syncHidden);
+}
+
+function submitMemberEdit(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  var btn = document.getElementById('me-submit');
+  var member = getMember();
+  if (!member || !member.phone) {
+    closeMemberEditModal();
+    openLoginModal();
+    return;
+  }
+
+  var nameEl = document.getElementById('me-name');
+  var emailEl = document.getElementById('me-email');
+  var bdayEl = document.getElementById('me-birthday');
+  var lineEl = document.getElementById('me-line');
+
+  var name = nameEl ? nameEl.value.trim() : '';
+  var email = emailEl ? emailEl.value.trim() : '';
+  var lineId = lineEl ? lineEl.value.trim() : '';
+
+  // 保險：直接從三個 select 重組生日
+  var yrEl = document.getElementById('me-bday-year');
+  var moEl = document.getElementById('me-bday-month');
+  var dyEl = document.getElementById('me-bday-day');
+  var birthday = '';
+  if (yrEl && moEl && dyEl && yrEl.value && moEl.value && dyEl.value) {
+    birthday = yrEl.value + '-' + moEl.value + '-' + dyEl.value;
+    if (bdayEl) bdayEl.value = birthday;
+  }
+
+  // 必填驗證
+  var missing = [];
+  if (!name) { if (nameEl) nameEl.style.borderColor = '#B76E79'; missing.push('姓名'); }
+  if (!birthday) {
+    [yrEl, moEl, dyEl].forEach(function(el) {
+      if (el && !el.value) el.style.borderColor = '#B76E79';
     });
-    if(res.ok || res.status === 201 || res.status === 204) {
-      // 成功寫入 Supabase
-      localStorage.setItem('ila_member', JSON.stringify(member));
-      if(typeof updateNavMemberState === 'function') updateNavMemberState();
-      finishAndClose('🎉 歡迎加入易藍琪！', 1800);
+    missing.push('生日');
+  }
+  if (!email) { if (emailEl) emailEl.style.borderColor = '#B76E79'; missing.push('Email'); }
+
+  if (missing.length) {
+    console.warn('[修改會員] 缺少必填欄位:', missing);
+    btn.textContent = '請填寫:' + missing.join('、');
+    btn.style.background = 'linear-gradient(135deg,#B76E79,#8B5A6B)';
+    btn.style.color = '#fff';
+    setTimeout(function() {
+      btn.textContent = '儲存修改';
+      btn.style.background = '';
+      btn.style.color = '';
+    }, 2500);
+    return;
+  }
+
+  btn.textContent = '儲存中...';
+  btn.disabled = true;
+
+  var updates = {
+    name: name,
+    email: email,
+    birthday: birthday
+  };
+
+  // LINE ID 暫存於 localStorage（等 members 表加上 line_id 欄位後再寫入）
+  try {
+    if (lineId) {
+      localStorage.setItem('ila_pending_line_id_' + member.phone, lineId);
     } else {
-      // API 回傳錯誤狀態，但仍視為「申請已收到」
-      finishAndClose('✅ 申請已收到，我們將盡快聯繫您！', 1800);
+      localStorage.removeItem('ila_pending_line_id_' + member.phone);
     }
-  } catch(err) {
-    // 網路錯誤也要自動關閉（這就是原本的 bug：沒有 setTimeout 關 modal）
-    finishAndClose('✅ 申請已送出！', 1800);
+  } catch (_) {}
+
+  // PATCH 到 Supabase（用 phone 當條件）
+  var url = SB_URL + '/rest/v1/members?phone=eq.' + encodeURIComponent(member.phone);
+  fetch(url, {
+    method: 'PATCH',
+    headers: {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + SB_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation'
+    },
+    body: JSON.stringify(updates)
+  }).then(function(res) {
+    return res.text().then(function(t) {
+      return { ok: res.ok, status: res.status, body: t };
+    });
+  }).then(function(r) {
+    if (r.ok) {
+      var saved = Object.assign({}, member, updates);
+      try {
+        var arr = JSON.parse(r.body);
+        if (Array.isArray(arr) && arr.length > 0) saved = arr[0];
+      } catch (_) {}
+      try { localStorage.setItem('ila_member', JSON.stringify(saved)); } catch (_) {}
+      if (typeof updateNavMemberState === 'function') updateNavMemberState();
+
+      btn.textContent = '✓ 已儲存';
+      btn.style.background = 'linear-gradient(135deg,#10b981,#059669)';
+      btn.style.color = '#fff';
+      if (typeof showMemberToast === 'function') showMemberToast('資料已更新 ✨');
+      setTimeout(function() {
+        closeMemberEditModal();
+        btn.textContent = '儲存修改';
+        btn.style.background = '';
+        btn.style.color = '';
+        btn.disabled = false;
+      }, 1200);
+    } else {
+      console.error('[修改會員] Supabase 失敗:', { status: r.status, body: r.body });
+      var msg = '儲存失敗,請稍後再試';
+      try {
+        var d = JSON.parse(r.body);
+        if (d.message && d.message.indexOf('duplicate') > -1) msg = '此 Email 已被其他會員使用';
+        else if (d.message) msg = d.message;
+      } catch (_) {}
+      btn.textContent = '✗ ' + msg;
+      btn.style.background = 'linear-gradient(135deg,#B76E79,#8B5A6B)';
+      btn.style.color = '#fff';
+      setTimeout(function() {
+        btn.textContent = '儲存修改';
+        btn.style.background = '';
+        btn.style.color = '';
+        btn.disabled = false;
+      }, 3000);
+    }
+  }).catch(function(err) {
+    console.error('[修改會員] 連線錯誤:', err);
+    btn.textContent = '✗ 連線失敗';
+    btn.style.background = 'linear-gradient(135deg,#B76E79,#8B5A6B)';
+    btn.style.color = '#fff';
+    setTimeout(function() {
+      btn.textContent = '儲存修改';
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.disabled = false;
+    }, 3000);
+  });
+}
+
+// ════════════ OAuth 登入（Google / LINE） ════════════
+function signInWithGoogle() {
+  if (!sbClient || !sbClient.auth) {
+    alert('OAuth 系統尚未準備好，請稍後再試或重新整理頁面');
+    return;
+  }
+  // 關閉開啟中的 modal，登入後跳轉回來
+  closeJoinModal();
+  closeLoginModal();
+  sbClient.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: window.location.origin + window.location.pathname,
+      queryParams: { access_type: 'offline', prompt: 'consent' }
+    }
+  }).catch(function(err) {
+    console.error('[OAuth] Google 登入失敗:', err);
+    alert('Google 登入啟動失敗：' + (err && err.message ? err.message : '未知錯誤'));
+  });
+}
+
+// 處理 OAuth callback：嘗試找到對應 member 或開啟補完資料表單
+async function handleOAuthLogin(session) {
+  if (!session || !session.user) return;
+  var user = session.user;
+  console.log('[OAuth] 登入成功，user.id:', user.id, 'email:', user.email);
+
+  try {
+    // 1. 用 auth_user_id 找
+    var r1 = await fetch(SB_URL + '/rest/v1/members?auth_user_id=eq.' + encodeURIComponent(user.id) + '&select=*', { headers: SB_HEADERS });
+    var arr1 = await r1.json();
+    if (Array.isArray(arr1) && arr1.length > 0) {
+      console.log('[OAuth] 找到既有會員（by auth_user_id）');
+      finalizeOAuthLogin(arr1[0]);
+      return;
+    }
+
+    // 2. 用 email 找（既有手機會員首次用 Google 登入）
+    if (user.email) {
+      var r2 = await fetch(SB_URL + '/rest/v1/members?email=eq.' + encodeURIComponent(user.email) + '&select=*', { headers: SB_HEADERS });
+      var arr2 = await r2.json();
+      if (Array.isArray(arr2) && arr2.length > 0) {
+        console.log('[OAuth] 用 email 找到會員，補上 auth_user_id');
+        var existing = arr2[0];
+        // PATCH 補上 auth_user_id
+        var r3 = await fetch(SB_URL + '/rest/v1/members?id=eq.' + existing.id, {
+          method: 'PATCH',
+          headers: { ...SB_HEADERS, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+          body: JSON.stringify({ auth_user_id: user.id })
+        });
+        var updated = await r3.json();
+        finalizeOAuthLogin(Array.isArray(updated) && updated.length ? updated[0] : { ...existing, auth_user_id: user.id });
+        return;
+      }
+    }
+
+    // 3. 全新會員：開補完資料 modal
+    console.log('[OAuth] 全新使用者，開啟補完資料 modal');
+    openCompleteProfileModal(user);
+
+  } catch (err) {
+    console.error('[OAuth] 處理登入失敗:', err);
+    alert('登入處理失敗，請重試或聯繫客服');
   }
 }
+
+function finalizeOAuthLogin(member) {
+  try { localStorage.setItem('ila_member', JSON.stringify(member)); } catch (_) {}
+  if (typeof updateNavMemberState === 'function') updateNavMemberState();
+  if (typeof showMemberToast === 'function') showMemberToast('歡迎回來，' + (member.name || '會員') + '！ ✨');
+  // 清掉 URL 上的 OAuth hash（access_token 等）
+  try { history.replaceState(null, '', window.location.pathname + window.location.search); } catch (_) {}
+}
+
+// ── 補完資料 Modal ──
+var _pendingOAuthUser = null;
+
+function openCompleteProfileModal(user) {
+  _pendingOAuthUser = user;
+  var modal = document.getElementById('complete-profile-modal');
+  if (!modal) return;
+  modal.style.display = 'flex';
+
+  setTimeout(function() {
+    initCompleteProfileBirthdaySelects();
+    // 從 Google user_metadata 預填名字
+    var meta = user.user_metadata || {};
+    var nameEl = document.getElementById('cp-name');
+    if (nameEl) nameEl.value = meta.full_name || meta.name || '';
+    var greeting = document.getElementById('cp-greeting');
+    if (greeting) {
+      greeting.innerHTML = (user.email ? user.email + '<br>' : '') + '請補上以下資料完成註冊';
+    }
+  }, 100);
+}
+
+function cancelCompleteProfile() {
+  if (!confirm('取消會表示登出此次 Google 登入，確定嗎？')) return;
+  if (sbClient && sbClient.auth) {
+    sbClient.auth.signOut().catch(function() {});
+  }
+  _pendingOAuthUser = null;
+  var modal = document.getElementById('complete-profile-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+function initCompleteProfileBirthdaySelects() {
+  var yearSel = document.getElementById('cp-bday-year');
+  var monthSel = document.getElementById('cp-bday-month');
+  var daySel = document.getElementById('cp-bday-day');
+  if (!yearSel || yearSel.options.length > 1) return;
+
+  var thisYear = new Date().getFullYear();
+  for (var y = thisYear; y >= thisYear - 80; y--) {
+    yearSel.innerHTML += '<option value="' + y + '">' + y + ' 年</option>';
+  }
+  for (var m = 1; m <= 12; m++) {
+    var mm = String(m).padStart(2, '0');
+    monthSel.innerHTML += '<option value="' + mm + '">' + m + ' 月</option>';
+  }
+  for (var d = 1; d <= 31; d++) {
+    var dd = String(d).padStart(2, '0');
+    daySel.innerHTML += '<option value="' + dd + '">' + d + ' 日</option>';
+  }
+  function syncHidden() {
+    var y = yearSel.value, mo = monthSel.value, da = daySel.value;
+    var hidden = document.getElementById('cp-birthday');
+    if (hidden) hidden.value = (y && mo && da) ? (y + '-' + mo + '-' + da) : '';
+    [yearSel, monthSel, daySel].forEach(function(el) { el.style.borderColor = ''; });
+  }
+  yearSel.addEventListener('change', syncHidden);
+  monthSel.addEventListener('change', syncHidden);
+  daySel.addEventListener('change', syncHidden);
+}
+
+function submitCompleteProfile(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  var btn = document.getElementById('cp-submit');
+  if (!_pendingOAuthUser) {
+    alert('登入狀態已過期，請重新登入');
+    return;
+  }
+
+  var nameEl = document.getElementById('cp-name');
+  var phoneEl = document.getElementById('cp-phone');
+  var lineEl = document.getElementById('cp-line');
+  var name = nameEl ? nameEl.value.trim() : '';
+  var phone = phoneEl ? phoneEl.value.trim() : '';
+  var lineId = lineEl ? lineEl.value.trim() : '';
+
+  // 重組生日
+  var yrEl = document.getElementById('cp-bday-year');
+  var moEl = document.getElementById('cp-bday-month');
+  var dyEl = document.getElementById('cp-bday-day');
+  var birthday = '';
+  if (yrEl && moEl && dyEl && yrEl.value && moEl.value && dyEl.value) {
+    birthday = yrEl.value + '-' + moEl.value + '-' + dyEl.value;
+  }
+
+  var missing = [];
+  if (!name) { if (nameEl) nameEl.style.borderColor = '#B76E79'; missing.push('姓名'); }
+  if (!phone) { if (phoneEl) phoneEl.style.borderColor = '#B76E79'; missing.push('手機'); }
+  if (!birthday) {
+    [yrEl, moEl, dyEl].forEach(function(el) { if (el && !el.value) el.style.borderColor = '#B76E79'; });
+    missing.push('生日');
+  }
+  if (missing.length) {
+    btn.textContent = '請填寫:' + missing.join('、');
+    btn.style.background = 'linear-gradient(135deg,#B76E79,#8B5A6B)';
+    btn.style.color = '#fff';
+    setTimeout(function() {
+      btn.textContent = '完成註冊';
+      btn.style.background = '';
+      btn.style.color = '';
+    }, 2500);
+    return;
+  }
+
+  btn.textContent = '建立中...';
+  btn.disabled = true;
+
+  var member = {
+    name: name,
+    phone: phone,
+    email: _pendingOAuthUser.email || null,
+    birthday: birthday,
+    level: '一般',
+    points: 100,
+    total_spent: 0,
+    auth_user_id: _pendingOAuthUser.id,
+    created_at: new Date().toISOString()
+  };
+
+  if (lineId && phone) {
+    try { localStorage.setItem('ila_pending_line_id_' + phone, lineId); } catch (_) {}
+  }
+
+  fetch(SB_URL + '/rest/v1/members', {
+    method: 'POST',
+    headers: { ...SB_HEADERS, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+    body: JSON.stringify(member)
+  }).then(function(res) {
+    return res.text().then(function(t) { return { ok: res.ok, status: res.status, body: t }; });
+  }).then(function(r) {
+    if (r.ok) {
+      var saved = member;
+      try {
+        var arr = JSON.parse(r.body);
+        if (Array.isArray(arr) && arr.length > 0) saved = arr[0];
+      } catch (_) {}
+
+      var modal = document.getElementById('complete-profile-modal');
+      if (modal) modal.style.display = 'none';
+      _pendingOAuthUser = null;
+
+      finalizeOAuthLogin(saved);
+      if (typeof showMemberToast === 'function') showMemberToast('🎉 加入成功！加入禮 100 點已發放');
+    } else {
+      console.error('[補完資料] 失敗:', { status: r.status, body: r.body });
+      var msg = '建立失敗,請稍後再試';
+      try {
+        var d = JSON.parse(r.body);
+        if (d.message && d.message.indexOf('duplicate') > -1) msg = '此電話或 Email 已被其他帳號使用';
+        else if (d.message) msg = d.message;
+      } catch (_) {}
+      btn.textContent = '✗ ' + msg;
+      btn.style.background = 'linear-gradient(135deg,#B76E79,#8B5A6B)';
+      btn.style.color = '#fff';
+      setTimeout(function() {
+        btn.textContent = '完成註冊';
+        btn.style.background = '';
+        btn.style.color = '';
+        btn.disabled = false;
+      }, 3000);
+    }
+  }).catch(function(err) {
+    console.error('[補完資料] 連線失敗:', err);
+    btn.textContent = '✗ 連線失敗';
+    btn.disabled = false;
+    setTimeout(function() { btn.textContent = '完成註冊'; }, 3000);
+  });
+}
+
+// ── OAuth 自動處理：頁面載入時偵測 callback session ──
+(function initOAuthListener() {
+  if (!sbClient || !sbClient.auth) return;
+  // 監聽登入狀態變化
+  sbClient.auth.onAuthStateChange(function(event, session) {
+    console.log('[Auth] 狀態變化:', event);
+    if (event === 'SIGNED_IN' && session) {
+      // 只在使用者剛登入（非已存在的 ila_member）時觸發處理
+      var existing = null;
+      try { existing = JSON.parse(localStorage.getItem('ila_member')); } catch (_) {}
+      if (!existing || existing.auth_user_id !== session.user.id) {
+        handleOAuthLogin(session);
+      }
+    } else if (event === 'SIGNED_OUT') {
+      // 不主動清除 ila_member（手機登入的會員不應受影響）
+    }
+  });
+})();
+
+// ── (handleAuthCallback 已移除,不再需要 magic link) ──
 
 // ── 手機選單 ──
 function openMobileMenu() {
@@ -3409,6 +4114,22 @@ function openLiveStream() {
       <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:#fff;">會員登入</div>
       <div style="font-size:11px;color:#D4AF37;letter-spacing:3px;margin-top:4px;font-family:'Cinzel',serif;">MEMBER LOGIN</div>
     </div>
+    <!-- Google 登入 -->
+    <button onclick="signInWithGoogle()" id="login-google-btn" style="width:100%;padding:12px 14px;background:#fff;border:1px solid rgba(212,175,55,0.3);border-radius:6px;color:#1f1f1f;font-size:14px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;display:flex;align-items:center;justify-content:center;gap:10px;font-weight:500;margin-bottom:14px;">
+      <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+        <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+        <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/>
+        <path fill="#FBBC05" d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.347 6.173 0 7.548 0 9s.348 2.827.957 4.042l3.007-2.332z"/>
+        <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+      </svg>
+      使用 Google 帳號登入
+    </button>
+    <!-- 分隔線 -->
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+      <div style="flex:1;height:1px;background:rgba(212,175,55,0.2);"></div>
+      <div style="font-size:11px;color:#7a8aab;letter-spacing:2px;">或</div>
+      <div style="flex:1;height:1px;background:rgba(212,175,55,0.2);"></div>
+    </div>
     <div style="margin-bottom:16px;">
       <label style="display:block;font-size:10px;letter-spacing:3px;color:#D4AF37;font-family:'Cinzel',serif;margin-bottom:8px;">PHONE NUMBER <span style="color:#B76E79;">*</span></label>
       <input id="login-phone" type="tel" placeholder="0912-345-678"
@@ -3416,7 +4137,7 @@ function openLiveStream() {
         onfocus="this.style.borderColor='rgba(212,175,55,0.8)'" onblur="this.style.borderColor='rgba(212,175,55,0.3)'"
         onkeydown="if(event.key==='Enter')memberLoginByPhone()">
     </div>
-    <button onclick="memberLoginByPhone()" style="width:100%;padding:14px;background:linear-gradient(135deg,#D4AF37,#c9956a);border:none;border-radius:6px;color:#000;font-size:12px;letter-spacing:4px;font-family:'Noto Sans TC',sans-serif;cursor:pointer;font-weight:700;margin-bottom:12px;">登入</button>
+    <button onclick="memberLoginByPhone()" style="width:100%;padding:14px;background:linear-gradient(135deg,#D4AF37,#c9956a);border:none;border-radius:6px;color:#000;font-size:12px;letter-spacing:4px;font-family:'Noto Sans TC',sans-serif;cursor:pointer;font-weight:700;margin-bottom:12px;">手機號碼登入</button>
     <div id="login-msg" style="text-align:center;font-size:12px;color:#7a8aab;min-height:20px;"></div>
     <div style="text-align:center;margin-top:16px;font-size:12px;color:#7a8aab;">
       還不是會員？<a href="#" onclick="closeLoginModal();openJoinModal();return false;" style="color:#D4AF37;text-decoration:none;">立即加入 →</a>
@@ -3433,19 +4154,41 @@ function getMember() {
 function updateNavMemberState() {
   const member = getMember();
   const loginBtn = document.getElementById('nav-member-btn');
-  if (!loginBtn) return;
+  const joinBtn = document.getElementById('nav-join-btn');
+  const mobileJoinBtn = document.getElementById('mobile-join-btn');
+
   if (member) {
-    loginBtn.innerHTML = '👤 ' + (member.name || '會員');
-    loginBtn.style.background = 'linear-gradient(135deg,#10b981,#059669)';
-    loginBtn.style.color = '#fff';
-    loginBtn.style.border = 'none';
-    loginBtn.onclick = function(e) { e.preventDefault(); openMemberInfoModal(); };
+    if (loginBtn) {
+      loginBtn.innerHTML = '👤 ' + (member.name || '會員');
+      loginBtn.style.background = 'linear-gradient(135deg,#10b981,#059669)';
+      loginBtn.style.color = '#fff';
+      loginBtn.style.border = 'none';
+      loginBtn.onclick = function(e) { e.preventDefault(); openMemberInfoModal(); };
+    }
+    if (joinBtn) {
+      joinBtn.innerHTML = '✏️ 修改資料';
+      joinBtn.onclick = function(e) { e.preventDefault(); openMemberEditModal(); return false; };
+    }
+    if (mobileJoinBtn) {
+      mobileJoinBtn.textContent = '修改會員資料';
+      mobileJoinBtn.onclick = function() { closeMobileMenu(); openMemberEditModal(); };
+    }
   } else {
-    loginBtn.innerHTML = '🔑 登入';
-    loginBtn.style.background = 'transparent';
-    loginBtn.style.border = '1px solid rgba(212,175,55,0.5)';
-    loginBtn.style.color = 'var(--gold)';
-    loginBtn.onclick = function(e) { e.preventDefault(); openLoginModal(); };
+    if (loginBtn) {
+      loginBtn.innerHTML = '🔑 登入';
+      loginBtn.style.background = 'transparent';
+      loginBtn.style.border = '1px solid rgba(212,175,55,0.5)';
+      loginBtn.style.color = 'var(--gold)';
+      loginBtn.onclick = function(e) { e.preventDefault(); openLoginModal(); };
+    }
+    if (joinBtn) {
+      joinBtn.innerHTML = '✨ 加入會員';
+      joinBtn.onclick = function(e) { e.preventDefault(); openJoinModal(); return false; };
+    }
+    if (mobileJoinBtn) {
+      mobileJoinBtn.textContent = '加入會員';
+      mobileJoinBtn.onclick = function() { closeMobileMenu(); openJoinModal(); };
+    }
   }
 }
 
@@ -3517,6 +4260,10 @@ function openMemberInfoModal() {
 
 function memberLogout() {
   localStorage.removeItem('ila_member');
+  // 同時登出 Supabase Auth（如果是 OAuth 登入）
+  if (sbClient && sbClient.auth) {
+    sbClient.auth.signOut().catch(function(e) { console.warn('[Auth] signOut warn:', e); });
+  }
   updateNavMemberState();
   const m = document.getElementById('member-info-modal');
   if(m) m.style.display = 'none';
@@ -3537,13 +4284,11 @@ function showMemberToast(msg) {
   t._t = setTimeout(() => { t.style.opacity = '0'; }, 2800);
 }
 
-// 加入會員成功後儲存 localStorage
-const _origSubmit = window.submitJoinMember;
-// Patch submitJoinMember to save member and update nav
+// 加入會員成功後儲存 localStorage 的初始化
 document.addEventListener('DOMContentLoaded', function() {
   updateNavMemberState();
   // 關閉 login modal 時點背景也可關閉
-  const lm = document.getElementById('login-modal');
+  var lm = document.getElementById('login-modal');
   if(lm) lm.addEventListener('click', function(e){ if(e.target===lm) closeLoginModal(); });
 });
 
@@ -3580,12 +4325,7 @@ function initBirthdaySelects() {
   daySel.addEventListener('change', syncHidden);
 }
 
-// 開啟加入 Modal 時初始化
-const _origOpenJoin = window.openJoinModal;
-window.openJoinModal = function() {
-  if (_origOpenJoin) _origOpenJoin();
-  setTimeout(initBirthdaySelects, 100);
-};
+// 載入時也預先初始化生日下拉
 document.addEventListener('DOMContentLoaded', initBirthdaySelects);
 
 </script>
