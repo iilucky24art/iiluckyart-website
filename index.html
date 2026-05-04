@@ -3259,12 +3259,15 @@ function submitJoinMember(e) {
     phone: phone,
     email: email || null,
     birthday: birthday,
-    line_id: lineId || null,
     level: '一般',
     points: 100,
     total_spent: 0,
     created_at: new Date().toISOString()
   };
+  // LINE ID 暫存於 localStorage,等 members 表加上 line_id 欄位後再寫入
+  if (lineId) {
+    try { localStorage.setItem('ila_pending_line_id_' + phone, lineId); } catch (_) {}
+  }
 
   // 直接寫入 members table - 簡單、可靠、立即生效
   fetch('https://vjpwqikvvzwemtkytdfb.supabase.co/rest/v1/members', {
