@@ -1195,6 +1195,7 @@ footer {
   <a href="#" onclick="closeMobileMenu();showPage('contact');">預約諮詢</a>
   <div class="mobile-menu-divider"></div>
   <button id="mobile-join-btn" class="mobile-join-btn" onclick="closeMobileMenu();openJoinModal();">加入會員</button>
+  <button id="mobile-logout-btn" onclick="closeMobileMenu();memberLogout();" style="display:none;width:100%;margin-top:12px;padding:12px;background:transparent;border:1px solid rgba(212,175,55,0.4);border-radius:6px;color:var(--muted);font-size:13px;letter-spacing:2px;cursor:pointer;font-family:'Noto Serif TC',serif;">登出</button>
 </div>
 
 <!-- HERO -->
@@ -4156,6 +4157,7 @@ function updateNavMemberState() {
   const loginBtn = document.getElementById('nav-member-btn');
   const joinBtn = document.getElementById('nav-join-btn');
   const mobileJoinBtn = document.getElementById('mobile-join-btn');
+  const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
 
   if (member) {
     if (loginBtn) {
@@ -4173,6 +4175,7 @@ function updateNavMemberState() {
       mobileJoinBtn.textContent = '修改會員資料';
       mobileJoinBtn.onclick = function() { closeMobileMenu(); openMemberEditModal(); };
     }
+    if (mobileLogoutBtn) mobileLogoutBtn.style.display = 'block';
   } else {
     if (loginBtn) {
       loginBtn.innerHTML = '🔑 登入';
@@ -4189,6 +4192,7 @@ function updateNavMemberState() {
       mobileJoinBtn.textContent = '加入會員';
       mobileJoinBtn.onclick = function() { closeMobileMenu(); openJoinModal(); };
     }
+    if (mobileLogoutBtn) mobileLogoutBtn.style.display = 'none';
   }
 }
 
